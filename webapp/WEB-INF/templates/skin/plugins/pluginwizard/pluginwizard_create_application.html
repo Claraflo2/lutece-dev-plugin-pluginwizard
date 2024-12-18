@@ -1,73 +1,107 @@
-<#include "sidebar.html" />   
+<#include "sidebar.html" />
 
 <div class="row">
-	<div class="container">
-		<div class="panel panel-default">
-			<div class="panel-body">
-				<div class="col-md-3">             
-					<@sidebar step="xpage" />
-					<div class="well">         
-						#i18n{pluginwizard.pluginwizard_create_application.pageHelp}    
-					</div>  
-				</div>
+	<div class="container mt-4" style="font-size: 14px; line-height: 1.42857143;">
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
 
-				<div class="col-md-9">
-					<form class="form-horizontal" method="post" action="jsp/site/Portal.jsp" >
-						<input type="hidden" name="page" value="pluginwizard" />
-						<fieldset>
-							<legend>#i18n{pluginwizard.pluginwizard_create_application.pageTitle}</legend>
-
-							 <#include "errors_handler.html" />
-
-							<div class="form-group">
-								<label class="col-md-3 control-label">#i18n{pluginwizard.pluginwizard_create_application.labelApplicationName} :</label>
-								<div class="col-md-9">   
-									<input class="form-control input-md" type="text" name="application_name" value="<#if application.applicationName??>${application.applicationName}<#else>${plugin_model.pluginName?keep_after("-")?lower_case}</#if>" />
-								</div>    
-							</div>
-
-							<div class="form-group">
-								<label class="col-md-3 control-label">#i18n{pluginwizard.pluginwizard_create_application.labelApplicationClass} :</label>
-								<div class="col-md-9">
-									<input class="form-control input-md" type="text" name="application_class" value="<#if application.applicationClass??>${application.applicationClass}<#else>${plugin_model.pluginName?keep_after("-")?cap_first}App</#if>"  />
+					<!-- Side Bar-->
+					<div class="col-md-3">
+						<@sidebar step="xpage" />
+						<div class="card bg-light mt-2">
+							<div class="card-body">
+								<div class="card-text">
+									#i18n{pluginwizard.pluginwizard_create_application.pageHelp}
 								</div>
 							</div>
-							 
-							 <div class="form-group">
-								<label class="col-md-3 control-label">#i18n{pluginwizard.pluginwizard_create_application.labelBusinessClass} :  </label>        
-								<div class="col-md-9">
-									<#list combo_business_classes?sort_by('name') as business>
-										<div class="checkbox">
-										<#assign used = false>
-										<#list plugin_applications as plugin_application> 
-											<#if plugin_application.getIdBusinessClasses()?seq_contains(business.code?number)>
-												<#assign used = true>
-											</#if>
-										</#list>
-										<#if used>
-											<label><input type="checkbox" disabled="disabled" name="id_business_class${business.code}" value="${business.code}" /> &nbsp; ${business.name}</label><br />
-										<#else>
-											<label><input type="checkbox" name="id_business_class${business.code}" value="${business.code}" />&nbsp;${business.name}</label><br />
-										</#if>
-										</div>
-									</#list>
-								</div>   
-							</div>
+						</div>
+					</div>
+					<!-- End Side Bar-->
 
-							<div class="form-group">
-								<div class="col-md-offset-3 col-md-9">
-								<button type="submit" name="action_createApplication" class="btn btn-primary">
-									#i18n{pluginwizard.pluginwizard_create_application.buttonCreateApplication}
-								</button>                   
-								<button type="submit" name="view_manageApplications" class="btn btn-default">
-									#i18n{pluginwizard.pluginwizard_create_application.buttonBack}
-								</button>
-							</div>
-							</div> 
-						</fieldset>
-					</form>
-				</div>    
-				<div class="clearfix"></div>
+					<!-- Card Content-->
+					<div class="col-md-9">
+						<form class="form-horizontal" method="post" action="jsp/site/Portal.jsp">
+							<fieldset>
+								<legend>#i18n{pluginwizard.pluginwizard_create_application.pageTitle}</legend>
+								
+								<#include "errors_handler.html" />
+
+								<input type="hidden" name="page" value="pluginwizard" />
+								
+								<!-- Group form Application Name -->
+								<div class="row mb-3 align-items-center">
+									<label class="col-form-label col-md-2 text-end">
+										#i18n{pluginwizard.pluginwizard_create_application.labelApplicationName} : 
+									</label>
+									<div class="col-md-10">
+										<input class="form-control" type="text" name="application_name"
+											value="<#if application.applicationName??>${application.applicationName}<#else>${plugin_model.pluginName?keep_after('-')?lower_case}</#if>" />
+									</div>
+								</div>
+
+								<!-- Group form Class -->
+								<div class="row mb-3 align-items-center">
+									<label class="col-form-label col-md-2 text-end">
+										#i18n{pluginwizard.pluginwizard_create_application.labelApplicationClass} : 
+									</label>
+									<div class="col-md-10">
+										<input class="form-control" type="text" name="application_class"
+											value="<#if application.applicationClass??>${application.applicationClass}<#else>${plugin_model.pluginName?keep_after('-')?cap_first}App</#if>" />
+									</div>
+								</div>
+
+								<!-- Group form Business Class -->
+								<div class="row mb-3">
+									<label class="col-form-label col-md-3">
+										#i18n{pluginwizard.pluginwizard_create_application.labelBusinessClass} : 
+									</label>
+									<div class="col-md-9">
+										<div class="checkbox">
+											<#list combo_business_classes?sort_by('name') as business>
+												<div class="form-check">
+													<#assign used=false> 
+													<#list plugin_applications as plugin_application> 
+														<#if plugin_application.getIdBusinessClasses()?seq_contains(business.code?number)>
+															<#assign used=true>
+														</#if>
+													</#list> 
+													<#if used> 
+														<input type="checkbox" class="form-check-input" disabled
+																id="business_${business.code}"
+																name="id_business_class${business.code}" 
+																value="${business.code}" />
+													<#else> 
+														<input type="checkbox" class="form-check-input"
+																id="business_${business.code}"
+																name="id_business_class${business.code}" 
+																value="${business.code}" />
+													</#if>
+													<label class="form-check-label" for="business_${business.code}"> 
+														${business.name} 
+													</label>
+												</div>
+											</#list>
+										</div>
+									</div>
+								</div>
+
+								<!-- Submit Buttons -->
+								<div class="row mb-3">
+									<div class="col-md-9 offset-md-3">
+										<button type="submit" name="action_createApplication" class="btn btn-primary me-2">
+											#i18n{pluginwizard.pluginwizard_create_application.buttonCreateApplication}
+										</button>
+										<button type="submit" name="view_manageApplications" class="btn btn-secondary">
+											#i18n{pluginwizard.pluginwizard_create_application.buttonBack}
+										</button>
+									</div>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+					<!-- End Card Content-->
+				</div>
 			</div>
 		</div>
 	</div>

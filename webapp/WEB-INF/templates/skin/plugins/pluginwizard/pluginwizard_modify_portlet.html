@@ -1,58 +1,78 @@
 <#include "sidebar.html" />   
 
 <div class="row">
-	<div class="container">
-		<div class="panel panel-default">
-			<div class="panel-body">
-				<div class="col-md-3">             
-					<@sidebar step="portlet" />
-					<div class="well">         
-						#i18n{pluginwizard.pluginwizard_modify_portlet.pageHelp} 
-					</div>  
-				</div>
+	<div class="container mt-4" style="font-size: 14px; line-height: 1.42857143;">
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
 
-				<div class="col-md-9">
-
-					<form class="form form-horizontal" method="post" action="jsp/site/Portal.jsp" >
-						<fieldset>
-							<legend>#i18n{pluginwizard.pluginwizard_modify_portlet.pageTitle}</legend>
-
-							<input type="hidden" name="page" value="pluginwizard" />
-							<input type="hidden" name="id" value="${portlet.id}" />  
-
-							 <#include "errors_handler.html" />
-
-							<div class="form-group">
-								<label class="control-label col-md-3">#i18n{pluginwizard.pluginwizard_modify_portlet.labelPortletClass} :</label>
-								<div class="col-md-9">
-									 <input class="form-control" type="text" name="portlet_class" size="30" value="${portlet.portletClass}"  />
+					<!-- Side Bar-->
+					<div class="col-md-3">
+						<@sidebar step="portlet" />
+						<div class="card bg-light mt-2">
+							<div class="card-body">
+								<div class="card-text">        
+									#i18n{pluginwizard.pluginwizard_modify_portlet.pageHelp} 
 								</div>  
 							</div>
+						</div>
+					</div>
+					<!-- End Side Bar-->
 
-							<div class="form-group">
-								<label class="control-label col-md-3">#i18n{pluginwizard.pluginwizard_modify_portlet.labelPortletTypeName} :</label>
-								<div class="col-md-9">
-									 <input class="form-control" type="text" name="portlet_type_name"  size="30"  value="${portlet.portletTypeName}"/>
-								</div>  
-							</div>
+					<!-- Card Content-->
+					<div class="col-md-9">
+	
+						<form class="form-horizontal" method="post" action="jsp/site/Portal.jsp" >
+							<fieldset>
+								<legend>#i18n{pluginwizard.pluginwizard_modify_portlet.pageTitle}</legend>
 
-							<div class="form-group">
-								<label class="control-label col-md-3">#i18n{pluginwizard.pluginwizard_modify_portlet.labelJspBaseName} :</label>
-								<div class="col-md-9">
-									 <input class="form-control" type="text" name="jsp_base_name" value="${portlet.jspBaseName}" />
-								</div>  
-							</div>
-
-							<div class="form-group">
-								<div class="col-md-offset-3 col-md-9">
-									<button type="submit" name="action_modifyPortlet" class="btn btn-primary">#i18n{pluginwizard.pluginwizard_modify_portlet.buttonModifyPortlet}</button>
-									<button type="submit" name="view_managePortlets" class="btn">#i18n{pluginwizard.pluginwizard_modify_portlet.buttonBack}</button>
+								<#include "errors_handler.html" />	
+								
+								<input type="hidden" name="page" value="pluginwizard" />
+								<input type="hidden" name="id" value="${portlet.id}" />  
+	
+								<!-- Group form Portlet class Name -->
+								<div class="row mb-3 align-items-center">
+									<label class="col-form-label col-md-2 text-end">
+										#i18n{pluginwizard.pluginwizard_modify_portlet.labelPortletClass} : 
+									</label>
+									<div class="col-md-10">
+										 <input class="form-control" type="text" name="portlet_class" size="30" value="${portlet.portletClass}"  />
+									</div>  
 								</div>
-							</div> 
-						</fieldset>
-					</form>
+								
+								<!-- Group form Portlet Type Name -->
+								<div class="row mb-3 align-items-center">
+									<label class="col-form-label col-md-2 text-end">
+										#i18n{pluginwizard.pluginwizard_modify_portlet.labelPortletTypeName} : 
+									</label>
+									<div class="col-md-10">
+										 <input class="form-control" type="text" name="portlet_type_name"  size="30"  value="${portlet.portletTypeName}"/>
+									</div>  
+								</div>
+								
+								<!-- Group form Jsp Base Name -->
+								<div class="row mb-3 align-items-center">
+									<label class="col-form-label col-md-2 text-end">
+										#i18n{pluginwizard.pluginwizard_modify_portlet.labelJspBaseName} : 
+									</label>
+									<div class="col-md-10">
+										 <input class="form-control" type="text" name="jsp_base_name" value="${portlet.jspBaseName}" />
+									</div>  
+								</div>
+								
+                                <!-- Submit Buttons -->
+								<div class="row mb-3">
+									<div class="col-md-10 offset-md-2">
+										<button type="submit" name="action_modifyPortlet" class="btn btn-primary">#i18n{pluginwizard.pluginwizard_modify_portlet.buttonModifyPortlet}</button>
+										<button type="submit" name="view_managePortlets" class="btn btn-secondary">#i18n{pluginwizard.pluginwizard_modify_portlet.buttonBack}</button>
+									</div>
+								</div> 
+							</fieldset>
+						</form>
+					</div>
+					<!-- End Card Content -->
 				</div>
-				<div class="clearfix"></div>
 			</div>
 		</div>
 	</div>

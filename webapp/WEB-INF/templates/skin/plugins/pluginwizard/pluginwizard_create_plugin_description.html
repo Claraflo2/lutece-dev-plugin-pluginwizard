@@ -1,112 +1,150 @@
-<#include "sidebar.html" />   
+<#include "sidebar.html" />
 
 <div class="row">
-	<div class="container">
-		<div class="panel panel-default">
-			<div class="panel-body">
-				<div class="col-md-3">       
-					<@sidebar step="description" />
-					<div class="well">
-						#i18n{pluginwizard.pluginwizard_create_plugin_description.pageHelp}
-					</div>
-				</div>
+	<div class="container mt-4" style="font-size: 14px; line-height: 1.42857143;">
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+					
+					<!-- Side Bar-->
+					<div class="col-md-3">
+                        <@sidebar step="description" />
+                        <div class="card bg-light mt-2">
+                            <div class="card-body">
+                                <div class="card-text">
+                                    #i18n{pluginwizard.pluginwizard_create_plugin_description.pageHelp}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Side Bar-->
 
-				<div class="col-md-9">
-					<form class="form-horizontal" method="post" action="jsp/site/Portal.jsp" >    
-						<input type="hidden" name="id_plugin" value="${plugin_id}" />
-						<fieldset>
-							<h4>#i18n{pluginwizard.pluginwizard_create_plugin_description.pageTitle}</h4>                 
+                    <!-- Card Content-->
+                    <div class="col-md-9">
+                        <form class="form-horizontal" method="post" action="jsp/site/Portal.jsp">
+                            <fieldset>
+                                <legend>#i18n{pluginwizard.pluginwizard_create_plugin_description.pageTitle}</legend>
+                                
+                                <#include "errors_handler.html" />
+                            	
+                            	<input type="hidden" name="id_plugin" value="${plugin_id}" />
+                                <input type="hidden" name="page" value="pluginwizard" />
 
-							<input type="hidden" name="page" value="pluginwizard" />                
+                                <!-- Group form Plugin Name -->
+                                <div class="row mb-3 align-items-center">
+                                    <label class="col-form-label col-md-2 text-end">
+                                        #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginName} * : 
+                                    </label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="text" name="plugin_name"
+                                               value="${plugin_model.pluginName!''}" readonly
+                                               style="background-color: #eeeeee;" />
+                                    </div>
+                                </div>
 
-							<#include "errors_handler.html" />
+                                <!-- Group form Plugin Type -->
+                                <div class="row mb-3 align-items-center">
+                                    <label class="col-form-label col-md-2 text-end">
+                                        Type * :
+                                    </label>
+                                    <div class="col-md-10">
+                                        <select class="form-select" name="type">
+                                            <option value="PLUGIN">Plugin</option>
+                                            <option value="MODULE"<#if (
+                                                    (plugin_model.type?? && plugin_model.type == 'MODULE') || 
+                                                    (plugin_model.pluginName?? && plugin_model.pluginName?contains('-'))
+                                                    )> selected </#if>>
+                                                Module
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
 
-							<div class="form-group">
-								<label class="col-md-3 control-label">                         	            	                        
-									#i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginName} :
-								</label>       
-								<div class="col-md-9">                
-									 <input class="form-control" type="text" name="plugin_name" value="${plugin_model.pluginName!''}" readonly />       
-								</div>
-							</div>
+                                <!-- Group form Plugin Description -->
+                                <div class="row mb-3 align-items-center">
+                                    <label class="col-form-label col-md-2 text-end">
+                                        #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginDescription} * : 
+                                    </label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="text" name="plugin_description" value="" />
+                                    </div>
+                                </div>
 
-							<div class="form-group">
-								<label class="col-md-3 control-label">Type :</label>            
-								<div class="col-md-9">
-									<select class="form-control" name="type">    				
-										<option value="PLUGIN">Plugin</option>
-                                                                                <option value="MODULE"
-										 <#if ( (plugin_model.type?? && plugin_model.type== 'MODULE') || (plugin_model.pluginName?? && plugin_model.pluginName?contains('-')) ) > selected </#if>
-                                                                                >Module</option>		
-									</select>     
-								</div>                   	
-							</div>  
+                                <!-- Group form Plugin Provider -->
+                                <div class="row mb-3 align-items-center">
+                                    <label class="col-form-label col-md-2 text-end">
+                                        #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginProvider} * : 
+                                    </label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="text" name="plugin_provider" value=""
+                                               placeholder="#i18n{pluginwizard.pluginwizard_create_plugin_description.placeholderPluginProvider}" />
+                                    </div>
+                                </div>
 
-							<div class="form-group">
-								<label class="col-md-3 control-label">#i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginDescription} : </label>
-								<div class="col-md-9">
-									 <input class="form-control" type="text" name="plugin_description" value="" />
-								</div>
-							</div>
+                                <!-- Group form Plugin Version -->
+                                <div class="row mb-3 align-items-center">
+                                    <label class="col-form-label col-md-2 text-end">
+                                        #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginVersion} * : 
+                                    </label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="text" name="plugin_version" value="1.0.0" />
+                                    </div>
+                                </div>
 
-							<div class="form-group">
-								<label class="col-md-3 control-label">#i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginProvider} : </label>
-								<div class="col-md-9">
-									 <input class="form-control" type="text" name="plugin_provider" value="" placeholder="#i18n{pluginwizard.pluginwizard_create_plugin_description.placeholderPluginProvider}"/>
-								</div>
-							</div>
+                                <!-- Group form Plugin Copyright -->
+                                <div class="row mb-3 align-items-center">
+                                    <label class="col-form-label col-md-2 text-end">
+                                        #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginCopyright} * : 
+                                    </label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="text" name="plugin_copyright" value=""
+                                               placeholder="#i18n{pluginwizard.pluginwizard_create_plugin_description.placeholderPluginCopyright}" />
+                                    </div>
+                                </div>
 
-							<div class="form-group">
-								<label class="col-md-3 control-label">#i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginVersion} : </label>       
-								<div class="col-md-9">
-									 <input class="form-control" type="text" name="plugin_version"  value="1.0.0" />
-								</div>                                                                              
-							</div>
+                                <!-- Group form Plugin Url -->
+                                <div class="row mb-3 align-items-center">
+                                    <label class="col-form-label col-md-2 text-end">
+                                        #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginProviderUrl} * :
+                                    </label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="text" name="plugin_provider_url" value=""
+                                               placeholder="#i18n{pluginwizard.pluginwizard_create_plugin_description.placeholderPluginProviderUrl}" />
+                                    </div>
+                                </div>
 
-							<div class="form-group">
-								<label class="col-md-3 control-label">#i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginCopyright} : </label>       
-								<div class="col-md-9">
-                                                                    <input class="form-control" type="text" name="plugin_copyright" value="" placeholder="#i18n{pluginwizard.pluginwizard_create_plugin_description.placeholderPluginCopyright} " />
-								</div>  
-							</div>
-
-							<div class="form-group">
-								<label class="col-md-3 control-label">#i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginProviderUrl} :</label>       
-								<div class="col-md-9">
-									 <input class="form-control" type="text" name="plugin_provider_url"  value="" placeholder="#i18n{pluginwizard.pluginwizard_create_plugin_description.placeholderPluginProviderUrl}" /> 
-								</div>              
-							</div>
-
-							<div class="form-group">
-								<label class="col-md-3 control-label">#i18n{pluginwizard.pluginwizard_create_plugin_description.labelPlugindbPoolRequired} :</label>            
-								<div class="col-md-9">
-									<select class="form-control" name="plugin_db_pool_required">    				
-										<option value="1">#i18n{pluginwizard.pluginwizard_create_plugin_description.labelTrue}
-										</option>    				
-										<option value="0">#i18n{pluginwizard.pluginwizard_create_plugin_description.labelFalse}
-										</option>				
-									</select>     
-								</div>                   	
-							</div>                                                                                   
-
-							<div class="form-group">
-								<div class="col-md-offset-3 col-md-9">
-								<button type="submit" name="action_descriptionPrevious" class="btn btn-primary">
-									<i class="glyphicon glyphicon-chevron-left"></i>
-									#i18n{pluginwizard.pluginwizard_create_plugin_description.buttonBack}
-								</button>                        
-								<button type="submit" name="action_descriptionNext" class="btn btn-primary">
-									#i18n{pluginwizard.pluginwizard_create_plugin_description.buttonNext}
-									<i class="glyphicon glyphicon-chevron-right"></i>
-								</button>
-								</div>
-							</div>                                              		
-
-						</fieldset>
-					</form>		 		
-				</div>	
-				<div class="clearfix"></div>
-			</div>		 		
-		</div>		 		
-	</div>
+                                <!-- Group form Plugin Pool required -->
+                                <div class="row mb-3 align-items-center">
+                                    <label class="col-form-label col-md-2 text-end">
+                                        #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPlugindbPoolRequired} * :
+                                    </label>
+                                    <div class="col-md-10">
+                                        <select class="form-select" name="plugin_db_pool_required">
+                                            <option value="1">#i18n{pluginwizard.pluginwizard_create_plugin_description.labelTrue}</option>
+                                            <option value="0">#i18n{pluginwizard.pluginwizard_create_plugin_description.labelFalse}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <!-- Submit Buttons -->
+                                <div class="row mb-3">
+                                    <div class="col-md-9 offset-md-3">
+                                        <button type="submit" name="action_descriptionPrevious" class="btn btn-primary me-2">
+                                            <i class="ti ti-chevron-left"></i>
+                                            #i18n{pluginwizard.pluginwizard_create_plugin_description.buttonBack}
+                                        </button>
+                                        <button type="submit" name="action_descriptionNext" class="btn btn-primary">
+                                            #i18n{pluginwizard.pluginwizard_create_plugin_description.buttonNext}
+                                            <i class="ti ti-chevron-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <!-- End Card Content-->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

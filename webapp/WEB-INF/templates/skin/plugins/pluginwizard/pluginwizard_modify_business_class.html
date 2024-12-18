@@ -1,124 +1,145 @@
-<#include "sidebar.html" />   
+<#include "sidebar.html" />
 
 <div class="row">
-	<div class="container">
-		<div class="panel panel-default">
-			<div class="panel-body">
-				<div class="col-md-3">             
-					<@sidebar step="model" />
-					<div class="well">         
-						#i18n{pluginwizard.pluginwizard_modify_business_class.pageHelp}   
-					</div>  
+	<div class="container mt-4" style="font-size: 14px; line-height: 1.42857143;">
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+                    
+                    <!-- Side Bar-->
+                    <div class="col-md-3">
+                        <@sidebar step="model" />
+                        <div class="card bg-light mt-2">
+                            <div class="card-body">
+                                <div class="card-text">
+									#i18n{pluginwizard.pluginwizard_modify_business_class.pageHelp}
+								</div>
+							</div>
+						</div>
+					</div>
+                    <!-- End Side Bar-->
+
+                    <!-- Card Content-->
+					<div class="col-md-9">
+						<form class="form-horizontal" role="form" method="post" action="jsp/site/Portal.jsp">
+							<fieldset>
+								<legend>#i18n{pluginwizard.pluginwizard_modify_business_class.pageTitle}</legend>
+
+								<#include "errors_handler.html" />
+								<#include "infos_handler.html" />
+
+								<input type="hidden" name="page" value="pluginwizard" /> 
+								<input type="hidden" name="id" value="${business_class.id}" /> 
+								<input type="hidden" name="business_class_id" value="${business_class.id}" />
+
+								<!-- Group form business class name -->
+								<div class="row mb-3 d-flex align-items-center">
+									<label class="col-form-label col-md-2 text-end">#i18n{pluginwizard.pluginwizard_modify_business_class.labelBusinessClass}
+										* :</label>
+									<div class="col-md-10">
+										<input class="form-control" type="text" name="business_class"
+											value="${business_class.businessClass}" size="30" />
+									</div>
+								</div>
+
+								<!-- Group form database table name -->
+								<div class="row mb-3 d-flex align-items-center">
+									<label class="col-form-label col-md-2 text-end">
+										#i18n{pluginwizard.pluginwizard_modify_business_class.labelBusinessTableName} * : 
+									</label>
+									<div class="col-md-10">
+										<input class="form-control" type="text"
+											name="business_table_name"
+											value="${business_class.businessTableName}" size="30" />
+									</div>
+								</div>
+								
+								<!-- Submit Buttons -->	
+								<div class="form-group text-center">
+									<button name="action_modifyBusinessClass"
+										class="btn btn-primary" type="submit">
+										#i18n{pluginwizard.pluginwizard_modify_business_class.buttonModifyClass}
+									</button>
+									<button name="action_validateAttributes"
+										class="btn btn-secondary" type="submit">
+										#i18n{pluginwizard.pluginwizard_modify_business_class.buttonBack}
+									</button>
+								</div>
+							</fieldset>
+						</form>
+						<br /> <br />
+
+						<!--Group form Add attributes -->
+						<form class="form float-end" method="post"
+							action="jsp/site/Portal.jsp">
+							<input type="hidden" name="page" value="pluginwizard" /> <input
+								type="hidden" name="view" value="createAttribute" /> <input
+								type="hidden" name="business_class_id"
+								value="${business_class.id}" />
+
+							<button type="submit" class="btn btn-primary">
+								<i class="ti ti-plus"></i>
+								#i18n{pluginwizard.pluginwizard_modify_business_class.labelCreateAttribute}
+							</button>
+						</form>
+						<h4>#i18n{pluginwizard.pluginwizard_modify_business_class.labelFielsetAttributes}</h4>
+						
+						<!-- Table of attributes -->
+						<table class="table table-sm table-hover table-striped">
+
+							<thead>
+								<tr>
+									<th>#i18n{pluginwizard.pluginwizard_modify_business_class.labelAttributeName}</th>
+									<th>#i18n{pluginwizard.pluginwizard_modify_business_class.labelAttributeType}</th>
+									<th>#i18n{pluginwizard.pluginwizard_modify_business_class.labelNotNull}</th>
+									<th>#i18n{pluginwizard.pluginwizard_modify_business_class.labelMaxLength}</th>
+									<th>#i18n{pluginwizard.pluginwizard_modify_business_class.labelAttributeAction}</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr>
+									<td>#i18n{pluginwizard.pluginwizard_modify_business_class.labelId}</td>
+									<td>#i18n{pluginwizard.pluginwizard_modify_business_class.labelPrimaryKey}</td>
+									<td>#i18n{pluginwizard.pluginwizard_modify_business_class.labelAuto}</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<#if attributes_list?? && attributes_list?size &gt; 0>		
+									<#list attributes_list as attribute>
+										<tr>
+											<td>${attribute.attributeName}</td>
+											<td>#i18n{pluginwizard.pluginwizard_attributes_types.${attribute.attributeTypeId}.description}</td>
+											<td>
+												<#if attribute.notNull> 
+													<span class="badge bg-success"><i class="ti ti-check"></i></span> 
+												</#if>
+											</td>
+											<td>
+												<#if attribute.maxLength &gt; 0 >
+													${attribute.maxLength}
+												</#if>
+											</td>
+											<td>
+												<a href="jsp/site/Portal.jsp?page=pluginwizard&view=modifyAttribute&attribute_id=${attribute.id}&business_class_id=${business_class.id}"
+												   class="btn btn-primary btn-sm"
+												   title="#i18n{pluginwizard.pluginwizard_modify_business_class.buttonModifyAttribute}">
+												   <i class="ti ti-edit"></i>
+												</a> 
+												<a href="jsp/site/Portal.jsp?page=pluginwizard&action=confirmRemoveAttribute&attribute_id=${attribute.id}&business_class_id=${business_class.id}"
+												   class="btn btn-danger btn-sm"
+												   title="#i18n{pluginwizard.pluginwizard_modify_business_class.buttonRemoveAttribute}">
+												   <i class="ti ti-trash"></i>
+												</a>
+											</td>
+										</tr>
+									</#list>
+								</#if>
+							</tbody>
+						</table>
+					</div>
+					<!-- End Card Content-->
 				</div>
-
-
-				<div class="col-md-9">
-
-					<#include "infos_handler.html" />
-
-					<form class="form-horizontal" role="form" method="post"  action="jsp/site/Portal.jsp">  
-						<input type="hidden" name="page" value="pluginwizard" />        
-						<input type="hidden" name="id" value="${business_class.id}"/>                                                              
-						<input type="hidden" name="business_class_id" value="${business_class.id}"/>                                                              
-						<fieldset>
-							<legend>#i18n{pluginwizard.pluginwizard_modify_business_class.pageTitle}</legend>
-
-							<#include "errors_handler.html" />
-
-							<div class="form-group">
-								<label class="col-md-3 control-label">#i18n{pluginwizard.pluginwizard_modify_business_class.labelBusinessClass} *:</label>      
-								<div class="col-md-9">
-									<input class="form-control input-md" type="text" name="business_class" value="${business_class.businessClass}" size="30" />      
-								</div>  
-							</div>
-
-							<div class="form-group">
-								<label class="col-md-3 control-label">#i18n{pluginwizard.pluginwizard_modify_business_class.labelBusinessTableName} *: </label>      
-								<div class="col-md-9">  
-									 <input class="form-control input-md" type="text" name="business_table_name" value="${business_class.businessTableName}" size="30" />      
-								</div>                       
-							</div>
-
-							<div class="form-group">                                          
-							<div class="col-md-offset-3 col-md-9">
-								<button name="action_modifyBusinessClass" class="btn btn-primary" type="submit">
-									#i18n{pluginwizard.pluginwizard_modify_business_class.buttonModifyClass}
-								</button>                    
-								<button name="action_validateAttributes" class="btn btn-default" type="submit">
-									#i18n{pluginwizard.pluginwizard_modify_business_class.buttonBack}
-								</button>  
-							</div>
-							</div>
-						</fieldset>
-					</form>
-
-					<form class="form pull-right" method="post" action="jsp/site/Portal.jsp">
-						<input type="hidden" name="page" value="pluginwizard" />
-						<input type="hidden" name="view" value="createAttribute" />
-						<input type="hidden" name="business_class_id" value="${business_class.id}"/>   
-
-						<button type="submit" class="btn btn-primary">
-							<i class="glyphicon glyphicon-plus"></i>
-							#i18n{pluginwizard.pluginwizard_modify_business_class.labelCreateAttribute}
-						</button> 
-					</form>                                                                              
-					<h4>#i18n{pluginwizard.pluginwizard_modify_business_class.labelFielsetAttributes}</h4>
-					
-					<table class="table table-condensed table-striped">
-
-						<thead>
-							<tr>
-								<th>#i18n{pluginwizard.pluginwizard_modify_business_class.labelAttributeName}</th>
-								<th>#i18n{pluginwizard.pluginwizard_modify_business_class.labelAttributeType}</th>
-								<th>#i18n{pluginwizard.pluginwizard_modify_business_class.labelNotNull}</th>
-								<th>#i18n{pluginwizard.pluginwizard_modify_business_class.labelMaxLength}</th>
-								<th>#i18n{pluginwizard.pluginwizard_modify_business_class.labelAttributeAction}</th>
-							</tr>
-						</thead>
-
-						<tbody>
-							<tr>
-								<td>#i18n{pluginwizard.pluginwizard_modify_business_class.labelId}</td>
-								<td>#i18n{pluginwizard.pluginwizard_modify_business_class.labelPrimaryKey}</td>
-								<td>#i18n{pluginwizard.pluginwizard_modify_business_class.labelAuto}</td>
-								<td></td>
-								<td></td>
-							</tr>
-							<#if attributes_list?? >
-							<#list attributes_list as attribute>
-							<tr>
-								<td>${attribute.attributeName}</td>
-								<td>#i18n{pluginwizard.pluginwizard_attributes_types.${attribute.attributeTypeId}.description}
-								</td>
-								<td>
-									<#if attribute.notNull>
-									<span class="label"><i class="glyphicon glyphicon-ok"></span>
-									</#if>
-								</td>
-								<td>
-									<#if attribute.maxLength &gt; 0 >
-									${attribute.maxLength}
-									</#if>
-								</td>
-								<td>
-									<a href="jsp/site/Portal.jsp?page=pluginwizard&view=modifyAttribute&attribute_id=${attribute.id}&business_class_id=${business_class.id}"
-									   class="btn btn-primary btn-sm"
-									   title="#i18n{pluginwizard.pluginwizard_modify_business_class.buttonModifyAttribute}" >
-										<i class="glyphicon glyphicon-edit"></i>
-									</a>
-									<a href="jsp/site/Portal.jsp?page=pluginwizard&action=confirmRemoveAttribute&attribute_id=${attribute.id}&business_class_id=${business_class.id}"   
-									   class="btn btn-danger btn-sm"
-									   title="#i18n{pluginwizard.pluginwizard_modify_business_class.buttonRemoveAttribute}" >
-										<i class="glyphicon glyphicon-trash"></i>
-									</a>
-								</td>
-								</#list> 
-							</tr>
-							</#if>
-						</tbody>
-					</table>
-				</div>
-				<div class="clearfix"></div>
 			</div>
 		</div>
 	</div>
