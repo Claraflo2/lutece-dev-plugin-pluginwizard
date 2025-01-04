@@ -30,11 +30,12 @@
 							<form class="form-horizontal" method="post" action="jsp/site/Portal.jsp" >
 								<input type="hidden" name="page" value="pluginwizard" />
 								          
-								<div class="mb-3">
-									<label class="form-label">#i18n{pluginwizard.pluginwizard_manage_plugin_rest.labelBusinessClass} :  </label>        
-									<div class="ps-3">
+								<div class="row">
+									<div class="col-md-3 text-end">
+										<label clas="form-label">#i18n{pluginwizard.pluginwizard_manage_plugin_rest.labelBusinessClass} :  </label>        
+									</div>
+									<div class="col-md-9">
 										<#list combo_business_classes?sort_by('name') as business>
-											<div class="checkbox">
 												<#assign used = false>
 												<#if plugin_rest.getIdBusinessClasses() ??>
 													<#if plugin_rest.getIdBusinessClasses()?seq_contains(business.code?number)>
@@ -51,7 +52,6 @@
 														</#if>
 														<label class="form-check-label" for="business_${business.code}">${business.name}</label>
 												</div>
-											</div>
 										</#list>  
 									</div>
 								</div>

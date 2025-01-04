@@ -1,7 +1,7 @@
 <#include "sidebar.html" />
 
-<div class="container mt-4" style="font-size: 14px; line-height: 1.42857143;">
-	<div class="row">
+<div class="row">
+	<div class="container mt-4" style="font-size: 14px; line-height: 1.42857143;">
 		<div class="card">
 			<div class="card-body">
 				<div class="row">
@@ -21,34 +21,70 @@
 
 					<!-- Card Content-->
                     <div class="col-md-9">
-                        <form class="form-horizontal" method="post" action="jsp/site/Portal.jsp">
+                        <form id="create-business-class-form" class="form-horizontal" method="post" action="jsp/site/Portal.jsp">
                             <fieldset>
                                 <legend>#i18n{pluginwizard.pluginwizard_create_business_class.pageTitle}</legend>
                                 
                                 <#include "errors_handler.html" />
 								
 								<input type="hidden" name="page" value="pluginwizard" />
+								<input type="hidden" id="plugin_name" value="${plugin_model.pluginName!''}" /> 
 								
                                 <!-- Group form business class name -->
-                                <div class="row mb-3 align-items-center">
-                                    <label class="col-form-label col-md-2 text-end">
+                                <div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
                                         #i18n{pluginwizard.pluginwizard_create_business_class.labelBusinessClass} * :
                                     </label>
+                                    
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text" name="business_class"
-                                               value="" size="30" />
+                                       <input type="text" id="businessClassName-input" name="business_class" class="form-control"
+                                               placeholder="#i18n{pluginwizard.pluginwizard_create_business_class.placeholderBusinessClass}" aria-describedby="businessClassName-help-message-div" size="30" maxlength=51 />
+ 
+                                    	<div id="businessClassName-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">
+                                            <span id="businessClassName-help-message-span" class="d-block"><i id="businessClassName-help-icon"></i> 
+                                                #i18n{pluginwizard.pluginwizard_create_business_class.helpRulesBusinessClass}
+                                            </span>
+                                            <span id="businessClassNameSize-help-message-span" class="d-block"><i id="businessClassNameSize-help-icon"></i> 
+                                                #i18n{pluginwizard.pluginwizard_create_business_class.helpRulesBusinessClassSize}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
+                                
+                                <!-- Group form plural business class name -->
+                                <div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
+                                    	#i18n{pluginwizard.pluginwizard_create_business_class.labelPluralBusinessClass} * :
+                                    </label>      
+									<div class="col-md-10">    
+										<input type="text" id="pluralBusinessClassName-input"  name="plural_business_class" class="form-control" aria-describedby="pluralBusinessClassName-help-message-div" size="30" maxlength=100/> 
+										<div id="pluralBusinessClassName-help-message-div" class="mt-2 text-muted">
+											<span class="d-block">#i18n{pluginwizard.pluginwizard_create_business_class.helpRulesPluralBusinessClass}</span>
+											<span class="d-block"><i class="ti ti-info-circle mx-1"></i>#i18n{pluginwizard.pluginwizard_create_business_class.infoPluralBusinessClass}</span> 
+										</div>    
+									</div>  
+								</div>
 
                                 <!-- Group form database table name -->
-                                <div class="row mb-3 align-items-center">
-                                    <label class="col-form-label col-md-2 text-end">
+                                <div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
                                         #i18n{pluginwizard.pluginwizard_create_business_class.labelBusinessTableName} * :
                                     </label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text"
-                                               name="business_table_name"
-                                               value="${plugin_model.pluginName?replace('-', '_')}_" size="30" />
+                                        <input type="text" id="businessTableName-input" name="business_table_name" class="form-control"
+                                               value="${plugin_model.pluginName?replace('-', '_')}_" 
+                                               placeholder="${plugin_model.pluginName?replace("-", "_")}_" aria-describedby="businessTableName-help-message-div" size="30" maxlength=64/> 
+                                        <div id="businessTableName-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">       
+                                        	<span id="businessTableNamePrefix-help-message-span" class="d-block" ><i id="businessTableNamePrefix-help-icon"></i>
+                                        		#i18n{pluginwizard.pluginwizard_create_business_class.helpRulesBusinessTableNamePrefix} "${plugin_model.pluginName?replace("-", "_")}_" 
+                                        	</span>
+                                        	<span id="businessTableName-help-message-span" class="d-block" ><i id="businessTableName-help-icon"></i>
+                                        		#i18n{pluginwizard.pluginwizard_create_business_class.helpRulesBusinessTableName} 
+                                        	</span>
+                                            <span id="businessTableNameSize-help-message-span" class="d-block" ><i id="businessTableNameSize-help-icon"></i>
+                                        		#i18n{pluginwizard.pluginwizard_create_business_class.helpRulesBusinessTableNameSize} 
+                                        	</span>
+                                    	</div>
                                     </div>
                                 </div>
 								
@@ -72,3 +108,15 @@
         </div>
     </div>
 </div>
+
+<script src='js/plugins/pluginwizard/validator.js'></script>
+<script src='js/plugins/pluginwizard/pluralize.js'></script>
+<script>
+	updateFormFront('create-business-class-form');
+	document.getElementById('businessClassName-input').addEventListener('blur', function(){ 
+		autoFillBusinessClassForm('create-business-class-form');
+	});
+	document.getElementById('create-business-class-form').addEventListener('input', function(event){
+		validationForm(event);
+	});
+</script>

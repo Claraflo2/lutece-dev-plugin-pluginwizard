@@ -41,6 +41,7 @@
 	                            <thead>
 	                                <tr>
 	                                    <th>#i18n{pluginwizard.pluginwizard_manage_business_classes.labelBusinessClass}</th>
+	                                    <th>#i18n{pluginwizard.pluginwizard_manage_business_classes.labelPluralBusinessClass}</th>
 	                                    <th>#i18n{pluginwizard.pluginwizard_manage_business_classes.labelBusinessTableName}</th>
 	                                    <th>#i18n{pluginwizard.pluginwizard_manage_business_classes.labelBusinessAction}</th>
 	                                </tr>
@@ -49,8 +50,9 @@
 	                                <#if business_classes?? >
 		                                <#list business_classes as business_class >
 			                                <tr>
-			                                    <td>${business_class.businessClass}</td>
-			                                    <td>${business_class.businessTableName}</td>
+			                                    <td>${business_class.businessClass!''}</td>
+			                                    <td>${business_class.pluralBusinessClass!''}</td>
+			                                    <td>${business_class.businessTableName!''}</td>
 			                                    <td>
 			                                        <a href="jsp/site/Portal.jsp?page=pluginwizard&view=modifyBusinessClass&business_class_id=${business_class.id}" 
 			                                           class="btn btn-primary btn-sm me-1" 

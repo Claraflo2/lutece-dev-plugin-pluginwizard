@@ -22,7 +22,7 @@
 					<!-- Card Content-->
 					<div class="col-md-9">
 	
-						<form class="form-horizontal" method="post" action="jsp/site/Portal.jsp" >
+						<form id="modify-portlet-form" class="form-horizontal" method="post" action="jsp/site/Portal.jsp" >
 							<fieldset>
 								<legend>#i18n{pluginwizard.pluginwizard_modify_portlet.pageTitle}</legend>
 
@@ -32,32 +32,53 @@
 								<input type="hidden" name="id" value="${portlet.id}" />  
 	
 								<!-- Group form Portlet class Name -->
-								<div class="row mb-3 align-items-center">
-									<label class="col-form-label col-md-2 text-end">
-										#i18n{pluginwizard.pluginwizard_modify_portlet.labelPortletClass} : 
+								<div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
+										#i18n{pluginwizard.pluginwizard_modify_portlet.labelPortletClass} * : 
 									</label>
 									<div class="col-md-10">
-										 <input class="form-control" type="text" name="portlet_class" size="30" value="${portlet.portletClass}"  />
+										<input type="text" id="portletClass-input" name="portlet_class" class="form-control" size="30" value="${portlet.portletClass}" placeholder="#i18n{pluginwizard.pluginwizard_modify_portlet.placeholderPortletClass}" max_length="100" />
+										<div id="portletClass-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">      
+											<span id="portletClass-help-message-span" class="d-block"><i id="portletClass-help-icon"></i>
+												#i18n{pluginwizard.pluginwizard_modify_portlet.helpRulesPortletClass}
+											</span>
+											<span id="portletClassSize-help-message-span" class="d-block"><i id="portletClassSize-help-icon"></i>
+												#i18n{pluginwizard.pluginwizard_modify_portlet.helpRulesPortletClassSize}
+											</span>
+										</div>
 									</div>  
 								</div>
 								
 								<!-- Group form Portlet Type Name -->
-								<div class="row mb-3 align-items-center">
-									<label class="col-form-label col-md-2 text-end">
-										#i18n{pluginwizard.pluginwizard_modify_portlet.labelPortletTypeName} : 
+								<div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
+										#i18n{pluginwizard.pluginwizard_modify_portlet.labelPortletTypeName} * : 
 									</label>
 									<div class="col-md-10">
-										 <input class="form-control" type="text" name="portlet_type_name"  size="30"  value="${portlet.portletTypeName}"/>
+										<input type="text" id="portletTypeName-input" name="portlet_type_name" class="form-control" size="30"  value="${portlet.portletTypeName}" placeholder="#i18n{pluginwizard.pluginwizard_modify_portlet.placeholderPortletTypeName}"/>
+										<div id="portletTypeName-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">      
+											<span id="portletTypeName-help-message-span" class="d-block"><i id="portletTypeName-help-icon"></i>
+												#i18n{pluginwizard.pluginwizard_modify_portlet.helpRulesPortletTypeName}
+											</span>
+										</div>
 									</div>  
 								</div>
 								
 								<!-- Group form Jsp Base Name -->
-								<div class="row mb-3 align-items-center">
-									<label class="col-form-label col-md-2 text-end">
-										#i18n{pluginwizard.pluginwizard_modify_portlet.labelJspBaseName} : 
+								<div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
+										#i18n{pluginwizard.pluginwizard_modify_portlet.labelJspBaseName} * : 
 									</label>
 									<div class="col-md-10">
-										 <input class="form-control" type="text" name="jsp_base_name" value="${portlet.jspBaseName}" />
+										<input type="text" id="portletJspName-input" name="jsp_base_name" class="form-control" value="${portlet.jspBaseName}" placeholder="#i18n{pluginwizard.pluginwizard_modify_portlet.placeholderPortletJspName}" max_length="100" />
+										<div id="portletJspName-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">      
+											<span id="portletJspName-help-message-span" class="d-block"><i id="portletJspName-help-icon"></i>
+												#i18n{pluginwizard.pluginwizard_modify_portlet.helpRulesPortletJspName}
+											</span>
+											<span id="portletJspNameSize-help-message-span" class="d-block"><i id="portletJspNameSize-help-icon"></i>
+												#i18n{pluginwizard.pluginwizard_modify_portlet.helpRulesPortletJspNameSize}
+											</span>
+										</div>
 									</div>  
 								</div>
 								
@@ -77,3 +98,11 @@
 		</div>
 	</div>
 </div>
+
+<script src='js/plugins/pluginwizard/validator.js'></script>
+<script>
+	updateFormFront('modify-portlet-form');
+	document.getElementById('modify-portlet-form').addEventListener('input', function(event){
+		validationForm(event);
+	});
+</script>

@@ -20,7 +20,7 @@
 
 					<!-- Card Content-->
 					<div class="col-md-9">
-						<form class="form-horizontal" method="post" action="jsp/site/Portal.jsp">
+						<form id="modify-application-form" class="form-horizontal" method="post" action="jsp/site/Portal.jsp">
 							<fieldset>
 								<legend>#i18n{pluginwizard.pluginwizard_modify_application.pageTitle}</legend>
 
@@ -30,41 +30,54 @@
 								<input type="hidden" name="id" value="${application.id}" />
 
 								<!-- Group form Application Name -->
-								<div class="row mb-3 align-items-center">
-									<label class="col-form-label col-md-2 text-end">
-										#i18n{pluginwizard.pluginwizard_modify_application.labelApplicationName}
-										: </label>
+								<div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
+										#i18n{pluginwizard.pluginwizard_modify_application.labelApplicationName} * :
+									</label>
 									<div class="col-md-10">
-										<input class="form-control" type="text"
-											name="application_name"
-											value="${application.applicationName}" />
+										<input type="text" name="application_name" id="applicationName-input" class="form-control" value="${application.applicationName}" maxlength=100 />
+										<div id="applicationName-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">      
+											<span id="applicationName-help-message-span" class="d-block"><i id="applicationName-help-icon"></i>
+												#i18n{pluginwizard.pluginwizard_modify_application.helpRulesApplicationName}
+											</span>
+											<span id="applicationNameSize-help-message-span" class="d-block"><i id="applicationNameSize-help-icon"></i>
+												#i18n{pluginwizard.pluginwizard_modify_application.helpRulesApplicationNameSize}
+											</span>
+										</div>
 									</div>
 								</div>
 
 								<!-- Group form Application Class -->
-								<div class="row mb-3 align-items-center">
-									<label class="col-form-label col-md-2 text-end">
-										#i18n{pluginwizard.pluginwizard_modify_application.labelApplicationClass}
-										: </label>
+								<div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
+										#i18n{pluginwizard.pluginwizard_modify_application.labelApplicationClass} * :
+									</label>
 									<div class="col-md-10">
-										<input class="form-control" type="text"
-											name="application_class"
-											value="${application.applicationClass}" />
+										<input type="text" id="applicationClass-input"
+											name="application_class"class="form-control" 
+											value="${application.applicationClass}" maxlength=100/>
+										<div id="applicationClass-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">      
+											<span id="applicationClass-help-message-span" class="d-block"><i id="applicationClass-help-icon"></i>
+												#i18n{pluginwizard.pluginwizard_modify_application.helpRulesApplicationClass}
+											</span>
+											<span id="applicationClassSize-help-message-span" class="d-block"><i id="applicationClassSize-help-icon"></i>
+												#i18n{pluginwizard.pluginwizard_modify_application.helpRulesApplicationClassSize}
+											</span>
+										</div>
 									</div>
 								</div>
 
 								<!-- Group form Business Class -->
-								<div class="row mb-3">
-									<label class="col-form-label col-md-3">
+								<div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
 										#i18n{pluginwizard.pluginwizard_modify_application.labelBusinessClass}
-										: </label>
+										: * </label>
 									<div class="col-md-9">
 										<div class="checkbox">
 											<#list combo_business_classes?sort_by('name') as business>
 												<div class="form-check">
 													<#if application.getIdBusinessClasses()?seq_contains(business.code?number)>
-														<input type="checkbox" class="form-check-input"
-															name="id_business_class${business.code}"
+														<input type="checkbox" name="id_business_class${business.code}" class="form-check-input"
 															value="${business.code}" checked /> 
 													<#else> 
 														<#assign used=false> 
@@ -74,14 +87,14 @@
 															</#if> 
 														</#list> 
 														<#if used> 
-															<input type="checkbox" class="form-check-input" 
-																id="business_${business.code}"
+															<input type="checkbox" id="business_${business.code}"
 																name="id_business_class${business.code}"
+																class="form-check-input" 
 																value="${business.code}" disabled /> 
 														<#else> 
-															<input type="checkbox" class="form-check-input"
-																id="business_${business.code}"
+															<input type="checkbox" id="business_${business.code}"
 																name="id_business_class${business.code}"
+																class="form-check-input"
 																value="${business.code}" />
 														</#if>
 													</#if>
@@ -116,3 +129,12 @@
 		</div>
 	</div>
 </div>
+
+<script src='js/plugins/pluginwizard/validator.js'></script>
+
+<script>
+updateFormFront('modify-application-form');
+document.getElementById('modify-application-form').addEventListener('input', function(event){
+	validationForm(event);
+});
+</script>

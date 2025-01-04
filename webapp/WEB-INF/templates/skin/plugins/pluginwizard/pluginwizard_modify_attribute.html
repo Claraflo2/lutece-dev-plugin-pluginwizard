@@ -21,7 +21,7 @@
 
             		<!-- Card Content-->
 					<div class="col-md-9">
-						<form class="form-horizontal" method="post" action="jsp/site/Portal.jsp">   
+						<form id="modify-attribute-form" class="form-horizontal" method="post" action="jsp/site/Portal.jsp">   
 							<fieldset>
 								<legend>#i18n{pluginwizard.pluginwizard_modify_attribute.pageTitle}</legend>
 	
@@ -32,29 +32,37 @@
 								<input type="hidden" name="attribute_id" value="${attribute.id}" />   
 	
 								<!-- Group form Attribute name -->
-								<div class="row mb-3 align-items-center">
-                                    <label class="col-form-label col-md-2 text-end">
+								<div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
                                     	#i18n{pluginwizard.pluginwizard_modify_attribute.labelAttributeName} * : 
                                     </label>      
 									<div class="col-md-10">       
-										<input type="text" class="form-control" name="attribute_name" value="${attribute.attributeName}"/>      
+										<input id="attributeName-input" type="text" class="form-control" name="attribute_name" value="${attribute.attributeName!''}" size="30" maxlength="64"/> 
+										<div id="attributeName-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">      
+											<span id="attributeName-help-message-span" class="d-block"><i id="attributeName-help-icon"></i>
+												#i18n{pluginwizard.pluginwizard_modify_attribute.helpRulesAttribut}
+											</span>
+											<span id="attributeNameSize-help-message-span" class="d-block"><i id="attributeNameSize-help-icon"></i>
+												#i18n{pluginwizard.pluginwizard_modify_attribute.helpRulesAttributSize}
+											</span>
+										</div>     
 									</div>  
 								</div>
 								
-								<!-- Group form type -->
-								<div class="row mb-3 align-items-center">
-                                    <label class="col-form-label col-md-2 text-end">
+								<!-- Group form attribute type -->
+								 <div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
                                     	#i18n{pluginwizard.pluginwizard_modify_attribute.labelAttributeType} * : 
                                     </label>      
 									<div class="col-md-10">          
-										<@select name="attribute_type_id" default_value="${attribute.attributeTypeId}" class='form-control' items=combo_attribute_type />      
+										<@select name="attribute_type_id" default_value="${attribute.attributeTypeId}" class='form-select' items=combo_attribute_type />      
 									</div>     
 								</div>
 	
 								<!-- Group form Mandatory -->
-								<div class="row mb-3 align-items-center">
-                                    <label class="col-form-label col-md-2 text-end">
-                                    	#i18n{pluginwizard.pluginwizard_modify_attribute.labelMandatory} * : 
+								<div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
+                                    	#i18n{pluginwizard.pluginwizard_modify_attribute.labelMandatory} : 
                                     </label>                            
 									<div class="col-md-10">
 										<div class="checkbox">    
@@ -84,3 +92,9 @@
 		</div>
 	</div>
 </div>
+<script src='js/plugins/pluginwizard/validator.js'></script>
+<script>
+	document.getElementById('modify-attribute-form').addEventListener('input', function(event){
+		validationForm(event);
+	});
+</script>

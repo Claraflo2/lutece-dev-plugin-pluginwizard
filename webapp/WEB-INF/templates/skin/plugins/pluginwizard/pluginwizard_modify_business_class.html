@@ -21,7 +21,7 @@
 
                     <!-- Card Content-->
 					<div class="col-md-9">
-						<form class="form-horizontal" role="form" method="post" action="jsp/site/Portal.jsp">
+						<form id="modify-business-class-form" class="form-horizontal" role="form" method="post" action="jsp/site/Portal.jsp">
 							<fieldset>
 								<legend>#i18n{pluginwizard.pluginwizard_modify_business_class.pageTitle}</legend>
 
@@ -31,37 +31,74 @@
 								<input type="hidden" name="page" value="pluginwizard" /> 
 								<input type="hidden" name="id" value="${business_class.id}" /> 
 								<input type="hidden" name="business_class_id" value="${business_class.id}" />
+								<input type="hidden" id="plugin_name" value="${plugin_model.pluginName}" /> 
 
 								<!-- Group form business class name -->
-								<div class="row mb-3 d-flex align-items-center">
-									<label class="col-form-label col-md-2 text-end">#i18n{pluginwizard.pluginwizard_modify_business_class.labelBusinessClass}
-										* :</label>
+								 <div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
+                                    	#i18n{pluginwizard.pluginwizard_modify_business_class.labelBusinessClass} * :
+                                    </label>
+
 									<div class="col-md-10">
-										<input class="form-control" type="text" name="business_class"
-											value="${business_class.businessClass}" size="30" />
+										<input type="text" id="businessClassName-input" name="business_class" class="form-control"
+											value="${business_class.businessClass!''}" placeholder="#i18n{pluginwizard.pluginwizard_modify_business_class.placeholderBusinessClass}" aria-describedby="businessClassName-help-message-div" size="30" maxlength=51/>  
+										<div id="businessClassName-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">
+                                            <span id="businessClassName-help-message-span" class="d-block"><i id="businessClassName-help-icon"></i> 
+                                                #i18n{pluginwizard.pluginwizard_modify_business_class.helpRulesBusinessClass}
+                                            </span>
+                                            <span id="businessClassNameSize-help-message-span" class="d-block"><i id="businessClassNameSize-help-icon"></i> 
+                                                #i18n{pluginwizard.pluginwizard_modify_business_class.helpRulesBusinessClassSize}
+                                            </span>
+                                        </div>  
 									</div>
 								</div>
 
+								<!-- Group form plural business class name -->
+                                 <div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
+                                    	#i18n{pluginwizard.pluginwizard_modify_business_class.labelPluralBusinessClass} * :
+                                    </label>      
+									<div class="col-md-10">    
+										<input type="text" id="pluralBusinessClassName-input" name="plural_business_class" class="form-control" value="${business_class.pluralBusinessClass!''}" aria-describedby="pluralBusinessClassName-help-message-div" size="30" maxlength=100/> 
+										<div id="pluralBusinessClassName-help-message-div" class="mt-2 text-muted">
+											<span class="d-block">#i18n{pluginwizard.pluginwizard_modify_business_class.helpRulesPluralBusinessClass}</span>
+											<span class="d-block"><i class="ti ti-info-circle mx-1"></i>
+												#i18n{pluginwizard.pluginwizard_modify_business_class.infoPluralBusinessClass}
+											</span> 
+										</div>    
+									</div>  
+								</div>
+
 								<!-- Group form database table name -->
-								<div class="row mb-3 d-flex align-items-center">
-									<label class="col-form-label col-md-2 text-end">
+								<div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
 										#i18n{pluginwizard.pluginwizard_modify_business_class.labelBusinessTableName} * : 
 									</label>
 									<div class="col-md-10">
-										<input class="form-control" type="text"
-											name="business_table_name"
-											value="${business_class.businessTableName}" size="30" />
+										<input type="text" id="businessTableName-input" name="business_table_name" class="form-control"
+                                               value="${business_class.businessTableName!''}" placeholder="${plugin_model.pluginName?replace("-", "_")}_" aria-describedby="businessTableName-help-message-div" size="30" maxlength=64/> 
+										<div id="businessTableName-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">       
+                                        	<span id="businessTableNamePrefix-help-message-span" class="d-block"><i id="businessTableNamePrefix-help-icon"></i>
+                                        		#i18n{pluginwizard.pluginwizard_modify_business_class.helpRulesBusinessTableNamePrefix} "${plugin_model.pluginName?replace("-", "_")}_" 
+                                        	</span>
+                                        	<span id="businessTableName-help-message-span" class="d-block"><i id="businessTableName-help-icon"></i>
+                                        		#i18n{pluginwizard.pluginwizard_modify_business_class.helpRulesBusinessTableName} 
+                                        	</span>
+                                            <span id="businessTableNameSize-help-message-span" class="d-block" ><i id="businessTableNameSize-help-icon"></i>
+                                        		#i18n{pluginwizard.pluginwizard_modify_business_class.helpRulesBusinessTableNameSize} 
+                                        	</span>
+                                    	</div>
 									</div>
 								</div>
 								
 								<!-- Submit Buttons -->	
 								<div class="form-group text-center">
-									<button name="action_modifyBusinessClass"
-										class="btn btn-primary" type="submit">
+									<button type="submit" name="action_modifyBusinessClass"
+										class="btn btn-primary" >
 										#i18n{pluginwizard.pluginwizard_modify_business_class.buttonModifyClass}
 									</button>
-									<button name="action_validateAttributes"
-										class="btn btn-secondary" type="submit">
+									<button type="submit" name="action_validateAttributes"
+										class="btn btn-secondary" >
 										#i18n{pluginwizard.pluginwizard_modify_business_class.buttonBack}
 									</button>
 								</div>
@@ -70,12 +107,10 @@
 						<br /> <br />
 
 						<!--Group form Add attributes -->
-						<form class="form float-end" method="post"
-							action="jsp/site/Portal.jsp">
-							<input type="hidden" name="page" value="pluginwizard" /> <input
-								type="hidden" name="view" value="createAttribute" /> <input
-								type="hidden" name="business_class_id"
-								value="${business_class.id}" />
+						<form class="form float-end" method="post" action="jsp/site/Portal.jsp">
+							<input type="hidden" name="page" value="pluginwizard" /> 
+							<input type="hidden" name="view" value="createAttribute" /> 
+							<input type="hidden" name="business_class_id" value="${business_class.id}" />
 
 							<button type="submit" class="btn btn-primary">
 								<i class="ti ti-plus"></i>
@@ -144,3 +179,15 @@
 		</div>
 	</div>
 </div>
+
+<script src='js/plugins/pluginwizard/validator.js'></script>
+<script src='js/plugins/pluginwizard/pluralize.js'></script>
+<script>
+	updateFormFront('modify-business-class-form');
+	document.getElementById('businessClassName-input').addEventListener('blur', function(){ 
+		autoFillBusinessClassForm('modify-business-class-form');
+	});
+	document.getElementById('modify-business-class-form').addEventListener('input', function(event){
+		validationForm(event);
+	});
+</script>

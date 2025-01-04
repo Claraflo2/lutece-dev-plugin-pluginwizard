@@ -41,10 +41,10 @@ import javax.validation.constraints.Pattern;
 /**
  * Form name
  */
-public class PluginNameFormBean implements Serializable,FormBean
+public class WorkflowTaskNameFormBean implements Serializable,FormBean
 {
-    @NotEmpty( message = "pluginwizard.error.plugin.name.notEmpty" )
-    @Pattern( regexp = "([a-z]*)", message = "pluginwizard.error.plugin.name.pattern" )
+    @NotEmpty( message = "pluginwizard.error.workflowtask.name.notEmpty" )
+    @Pattern( regexp = "([a-z]*)", message = "pluginwizard.error.workflowtask.name.pattern" )
     private String _strName;
 
     /**

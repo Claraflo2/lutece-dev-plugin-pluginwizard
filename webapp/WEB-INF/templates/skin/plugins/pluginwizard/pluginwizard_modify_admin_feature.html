@@ -21,7 +21,7 @@
                     
                     <!-- Card Content-->
 					<div class="col-md-9">
-						<form class="form-horizontal" method="post" action="jsp/site/Portal.jsp">
+						<form id="modify-admin-feature-form" class="form-horizontal" method="post" action="jsp/site/Portal.jsp">
 							<fieldset>
 								<legend>#i18n{pluginwizard.pluginwizard_modify_admin_feature.pageTitle}</legend>
 
@@ -29,55 +29,79 @@
 								
 								<input type="hidden" name="page" value="pluginwizard" /> 
 								<input type="hidden" name="id" value="${feature.id}" />
+								<input type="hidden" name="plugin_name" value="${plugin_model.pluginName}" />
 
 								<!-- Group form Title -->
-								<div class="row mb-3 align-items-center">
-									<label class="col-form-label col-md-2 text-end">
-										#i18n{pluginwizard.pluginwizard_modify_admin_feature.labelFeatureTitle} : 
+								<div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
+										#i18n{pluginwizard.pluginwizard_modify_admin_feature.labelFeatureTitle} * : 
 									</label>
 									<div class="col-md-10">
-										<input class="form-control" type="text"
-											name="feature_title" value="${feature.featureTitle}" />
+										<input type="text" id="adminFeatureTitle-input"
+											name="feature_title" class="form-control"  value="${feature.featureTitle}" aria-describedby="adminFeatureTitle-help-message-div" maxlength="80"/>
+										<div id="adminFeatureTitle-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">      
+											<span id="adminFeatureTitle-help-message-span" class="d-block"><i id="adminFeatureTitle-help-icon"></i>
+												#i18n{pluginwizard.pluginwizard_modify_admin_feature.helpRulesFeatureTitle}
+											</span>
+										</div>
 									</div>
 								</div>
 
 								<!-- Group form Description -->
-								<div class="row mb-3 align-items-center">
-									<label class="col-form-label col-md-2 text-end">
-										#i18n{pluginwizard.pluginwizard_modify_admin_feature.labelFeatureDescription} : 
+								<div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
+										#i18n{pluginwizard.pluginwizard_modify_admin_feature.labelFeatureDescription} * : 
 									</label>
 									<div class="col-md-10">
-										<input class="form-control" type="text"
-											name="feature_description"
-											value="${feature.featureDescription}" />
+										<input type="text" id="adminFeatureDescription-input"
+											name="feature_description" class="form-control" 
+											value="${feature.featureDescription}" aria-describedby="adminFeatureDescription-help-message-div" maxlength="255" />
+										<div id="adminFeatureDescription-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">      
+											<span id="adminFeatureDescription-help-message-span" class="d-block"><i id="adminFeatureDescription-help-icon"></i>
+												#i18n{pluginwizard.pluginwizard_modify_admin_feature.helpRulesFeatureDescription}
+											</span>
+										</div>
 									</div>
 								</div>
 
-								<!-- Group form Name -->
-								<div class="row mb-3 align-items-center">
-									<label class="col-form-label col-md-2 text-end">
-										#i18n{pluginwizard.pluginwizard_modify_admin_feature.labelFeatureName} : 
+								<!-- Group form Tech Name -->
+								<div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">	#i18n{pluginwizard.pluginwizard_modify_admin_feature.labelFeatureName} * : 
 									</label>
 									<div class="col-md-10">
-										<input class="form-control" type="text"
-											name="feature_name" value="${feature.featureName}" />
+										<input type="text" id="adminFeatureTechName-input" name="feature_name" class="form-control"  value="${feature.featureName}" aria-describedby="adminFeatureTechName-help-message-div" maxlength="100"/>
+									<div id="adminFeatureTechName-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">      
+											<span id="adminFeatureTechName-help-message-span" class="d-block"><i id="adminFeatureTechName-help-icon"></i>
+												#i18n{pluginwizard.pluginwizard_modify_admin_feature.helpRulesFeatureTechName}
+											</span>
+											<span id="adminFeatureTechNameSize-help-message-span" class="d-block"><i id="adminFeatureTechNameSize-help-icon"></i>
+												#i18n{pluginwizard.pluginwizard_modify_admin_feature.helpRulesFeatureTechNameSize}
+											</span>
+										</div>
 									</div>
 								</div>
 
 								<!-- Group form Management -->
-								<div class="row mb-3 align-items-center">
-									<label class="col-form-label col-md-2 text-end">
-										#i18n{pluginwizard.pluginwizard_modify_admin_feature.labelFeatureManagement} : 
+								<div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">	#i18n{pluginwizard.pluginwizard_modify_admin_feature.labelFeatureManagement} * : 
 									</label>
 									<div class="col-md-10">
-										<input class="form-control" type="text"
-											name="feature_right" value="${feature.featureRight}" />
+										<input type="text" id="adminFeatureRight-input"
+											name="feature_right" class="form-control" value="${feature.featureRight}" aria-describedby="adminFeatureRight-help-message-div" maxlength="255" />
+										<div id="adminFeatureRight-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">      
+											<span id="adminFeatureRight-help-message-span" class="d-block"><i id="adminFeatureRight-help-icon"></i>
+												#i18n{pluginwizard.pluginwizard_modify_admin_feature.helpRulesFeatureRight}
+											</span>
+											<span id="adminFeatureRightSize-help-message-span" class="d-block"><i id="adminFeatureRightSize-help-icon"></i>
+												#i18n{pluginwizard.pluginwizard_modify_admin_feature.helpRulesFeatureRightSize}
+											</span>
+										</div>
 									</div>
 								</div>
 
 								<!-- Group form Level -->
-								<div class="row mb-3 align-items-center">
-									<label class="col-form-label col-md-2 text-end">
+								<div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
 										#i18n{pluginwizard.pluginwizard_modify_admin_feature.labelFeatureLevel} : 
 									</label>
 									<div class="col-md-10">
@@ -102,9 +126,9 @@
 									</div>
 								</div>
 
-								<!-- Group form Business Class -->
-								<div class="row mb-3">
-									<label class="col-form-label col-md-2 text-end">
+								<!-- Group select form Business Class-->
+								<div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
 										#i18n{pluginwizard.pluginwizard_modify_admin_feature.labelBusinessClass} : 
 									</label>
 									<div class="col-md-10">
@@ -112,9 +136,11 @@
 											<#list combo_business_classes?sort_by('name') as business>
 												<div class="form-check">
 													<#if feature.getIdBusinessClasses()?seq_contains(business.code?number)>
-														<input class="form-check-input" type='checkbox' checked
+														<input type='checkbox' 
+															id="id_business_class${business.code}"
 															name='id_business_class${business.code}'
-															value='${business.code}' />
+															class="form-check-input"
+															value='${business.code}' checked />
 													<#else> 
 														<#assign used=false> 
 														<#list admin_features as admin_feature> 
@@ -122,16 +148,20 @@
 																<#assign used=true></#if> 
 														</#list> 
 														<#if used> 
-															<input class="form-check-input" type="checkbox" disabled
+															<input type="checkbox" 
+																id="id_business_class${business.code}"
 																name="id_business_class${business.code}"
-																value="${business.code}" />
+																class="form-check-input"
+																value="${business.code}" disabled />
 														<#else> 
-															<input class="form-check-input" type="checkbox" 
+															<input type="checkbox"  
+																id="id_business_class${business.code}"
 																name="id_business_class${business.code}"
+																class="form-check-input"
 																value="${business.code}" />
 														</#if>
 													</#if>
-													<label class="form-check-label" for="id_business_${business.code}">
+													<label class="form-check-label" for="id_business_class${business.code}">
 														${business.name}
 													</label>
 												</div>
@@ -160,3 +190,15 @@
 		</div>
 	</div>
 </div>
+
+<script src='js/plugins/pluginwizard/validator.js'></script>
+
+<script>
+updateFormFront('modify-admin-feature-form');
+document.getElementById('adminFeatureTitle-input').addEventListener('blur', function(){ 
+	autoFillAdminFeatureForm('modify-admin-feature-form');
+});
+document.getElementById('modify-admin-feature-form').addEventListener('input', function(event){
+	validationForm(event);
+});
+</script>

@@ -53,6 +53,9 @@ public class BusinessClass
     @NotEmpty( message = "pluginwizard.error.businessClass.class.notEmpty" )
     @Pattern( regexp = "[A-Z][a-zA-Z]*", message = "pluginwizard.error.businessClass.class.pattern" )
     private String _strBusinessClass;
+    @NotEmpty( message = "pluginwizard.error.businessClass.pluralBusinessClass.notEmpty" )
+    @Pattern( regexp = "[A-Z][a-zA-Z]*", message = "pluginwizard.error.businessClass.pluralBusinessClass.pattern" )
+    private String _strPluralBusinessClass;
     @NotEmpty( message = "pluginwizard.error.businessClass.tableName.notEmpty" )
     @Pattern( regexp = "[a-z][a-z_]*", message = "pluginwizard.error.businessClass.tableName.pattern" )
     private String _strBusinessTableName;
@@ -109,6 +112,27 @@ public class BusinessClass
         _strBusinessClass = strBusinessClass;
     }
 
+    /**
+     * Returns the PluralBusinessClass
+     *
+     * @return The PluralBusinessClass
+     */
+    public String getPluralBusinessClass( )
+    {
+        return _strPluralBusinessClass;
+    }
+
+    /**
+     * Sets the PluralBusinessClass
+     *
+     * @param strPluralBusinessClass
+     *            The PluralBusinessClass
+     */
+    public void setPluralBusinessClass( String strPluralBusinessClass )
+    {
+        _strPluralBusinessClass = strPluralBusinessClass;
+    }
+    
     /**
      * Returns the BusinessTableName
      *

@@ -21,101 +21,123 @@
 
                     <!-- Card Content-->
                     <div class="col-md-9">
-                        <form class="form-horizontal" method="post" action="jsp/site/Portal.jsp">
+                        <form id="create-description-form" class="form-horizontal" method="post" action="jsp/site/Portal.jsp">
                             <fieldset>
                                 <legend>#i18n{pluginwizard.pluginwizard_create_plugin_description.pageTitle}</legend>
                                 
                                 <#include "errors_handler.html" />
-                            	
+
+                            	<input type="hidden" name="page" value="pluginwizard" />
                             	<input type="hidden" name="id_plugin" value="${plugin_id}" />
-                                <input type="hidden" name="page" value="pluginwizard" />
 
                                 <!-- Group form Plugin Name -->
-                                <div class="row mb-3 align-items-center">
+                                <div class="row mb-3 d-flex align-items-center">
                                     <label class="col-form-label col-md-2 text-end">
                                         #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginName} * : 
                                     </label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text" name="plugin_name"
-                                               value="${plugin_model.pluginName!''}" readonly
-                                               style="background-color: #eeeeee;" />
+                                        <input type="text" name="plugin_name" class="form-control" value="${plugin_model.pluginName!''}" readonly style="background-color: #eeeeee;" />
                                     </div>
                                 </div>
 
                                 <!-- Group form Plugin Type -->
-                                <div class="row mb-3 align-items-center">
-                                    <label class="col-form-label col-md-2 text-end">
-                                        Type * :
+                                <div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
+                                        #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginType} * :
                                     </label>
                                     <div class="col-md-10">
-                                        <select class="form-select" name="type">
-                                            <option value="PLUGIN">Plugin</option>
-                                            <option value="MODULE"<#if (
+                                        <input class="form-control" type="text" name="type"
+                                               value=<#if (
                                                     (plugin_model.type?? && plugin_model.type == 'MODULE') || 
                                                     (plugin_model.pluginName?? && plugin_model.pluginName?contains('-'))
-                                                    )> selected </#if>>
-                                                Module
-                                            </option>
-                                        </select>
+                                                    )> #i18n{pluginwizard.pluginwizard_create_plugin_description.labelModule}
+                                                    <#else> #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPlugin} </#if> readonly
+                                               style="background-color: #eeeeee;" />
                                     </div>
-                                </div>
-
+								</div>
+								
                                 <!-- Group form Plugin Description -->
-                                <div class="row mb-3 align-items-center">
-                                    <label class="col-form-label col-md-2 text-end">
+                                <div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
                                         #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginDescription} * : 
                                     </label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text" name="plugin_description" value="" />
+                                        <input type="text" id="pluginDescription-input" name="plugin_description" class="form-control" aria-describedby="pluginDescription-help-message-div" maxlength=255/>
+                                        <div id="pluginDescription-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">
+											<span id="pluginDescription-help-message-span" class="d-block"><i id="pluginDescription-help-icon"></i> 
+												#i18n{pluginwizard.pluginwizard_create_plugin_description.helpRulesPluginDescription}
+											</span>
+										</div>
                                     </div>
                                 </div>
 
                                 <!-- Group form Plugin Provider -->
-                                <div class="row mb-3 align-items-center">
-                                    <label class="col-form-label col-md-2 text-end">
+                                <div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
                                         #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginProvider} * : 
                                     </label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text" name="plugin_provider" value=""
-                                               placeholder="#i18n{pluginwizard.pluginwizard_create_plugin_description.placeholderPluginProvider}" />
+                                        <input type="text" id="pluginProvider-input" name="plugin_provider" class="form-control"
+                                               placeholder="#i18n{pluginwizard.pluginwizard_create_plugin_description.placeholderPluginProvider}" aria-describedby="pluginProvider-help-message-div" maxlength=255/>
+                                        <div id="pluginProvider-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">
+                                            <span id="pluginProvider-help-message-span" class="d-block"><i id="pluginProvider-help-icon"></i> 
+                                                #i18n{pluginwizard.pluginwizard_create_plugin_description.helpRulesPluginProvider}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- Group form Plugin Version -->
-                                <div class="row mb-3 align-items-center">
-                                    <label class="col-form-label col-md-2 text-end">
+                                <div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
                                         #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginVersion} * : 
                                     </label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text" name="plugin_version" value="1.0.0" />
+                                        <input type="text" id="pluginVersion-input" name="plugin_version" class="form-control" value="1.0.0" 
+                                        	   placeholder="#i18n{pluginwizard.pluginwizard_create_plugin_description.placeholderPluginVersion}" aria-describedby="pluginVersion-help-message-div" maxlength=10/>
+                                        <div id="pluginVersion-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">
+                                            <span id="pluginVersion-help-message-span" class="d-block"><i id="pluginVersion-help-icon"></i> 
+                                                #i18n{pluginwizard.pluginwizard_create_plugin_description.helpRulesPluginVersion}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- Group form Plugin Copyright -->
-                                <div class="row mb-3 align-items-center">
-                                    <label class="col-form-label col-md-2 text-end">
+                                <div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
                                         #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginCopyright} * : 
                                     </label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text" name="plugin_copyright" value=""
-                                               placeholder="#i18n{pluginwizard.pluginwizard_create_plugin_description.placeholderPluginCopyright}" />
+                                        <input type="text" id="pluginCopyright-input" name="plugin_copyright" class="form-control"
+                                               placeholder="#i18n{pluginwizard.pluginwizard_create_plugin_description.placeholderPluginCopyright}" aria-describedby="pluginCopyright-help-message-div" maxlength=255 />
+                                        <div id="pluginCopyright-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">
+                                            <span id="pluginCopyright-help-message-span" class="d-block"><i id="pluginCopyright-help-icon"></i> 
+                                                #i18n{pluginwizard.pluginwizard_create_plugin_description.helpRulesPluginCopyright}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- Group form Plugin Url -->
-                                <div class="row mb-3 align-items-center">
-                                    <label class="col-form-label col-md-2 text-end">
+                                <div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
                                         #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPluginProviderUrl} * :
                                     </label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text" name="plugin_provider_url" value=""
-                                               placeholder="#i18n{pluginwizard.pluginwizard_create_plugin_description.placeholderPluginProviderUrl}" />
+                                        <input type="text" id="pluginProviderUrl-input" name="plugin_provider_url" class="form-control"
+                                               placeholder="#i18n{pluginwizard.pluginwizard_create_plugin_description.placeholderPluginProviderUrl}" aria-describedby="pluginProviderUrl-help-message-div" maxlength=255/>
+                                        <div id="pluginProviderUrl-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">
+                                            <span id="pluginProviderUrl-help-message-span" class="d-block"><i id="pluginProviderUrl-help-icon"></i> 
+                                                #i18n{pluginwizard.pluginwizard_create_plugin_description.helpRulesPluginProviderUrl}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- Group form Plugin Pool required -->
-                                <div class="row mb-3 align-items-center">
-                                    <label class="col-form-label col-md-2 text-end">
+                                <div class="row mb-3 align-items-start">
+                                    <label class="col-form-label col-md-2 text-end align-self-start">
                                         #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPlugindbPoolRequired} * :
                                     </label>
                                     <div class="col-md-10">
@@ -129,7 +151,7 @@
                                 <!-- Submit Buttons -->
                                 <div class="row mb-3">
                                     <div class="col-md-9 offset-md-3">
-                                        <button type="submit" name="action_descriptionPrevious" class="btn btn-primary me-2">
+                                        <button type="submit" name="view_createPlugin" class="btn btn-primary me-2">
                                             <i class="ti ti-chevron-left"></i>
                                             #i18n{pluginwizard.pluginwizard_create_plugin_description.buttonBack}
                                         </button>
@@ -148,3 +170,9 @@
         </div>
     </div>
 </div>
+
+<script src='js/plugins/pluginwizard/validator.js'></script>
+<script>
+	updateFormFront('create-description-form');
+	document.getElementById('create-description-form').addEventListener('input', function(event){validationForm(event);});
+</script>

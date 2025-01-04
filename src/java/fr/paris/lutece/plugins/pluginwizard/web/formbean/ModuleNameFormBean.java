@@ -41,10 +41,12 @@ import javax.validation.constraints.Pattern;
 /**
  * Form name
  */
-public class PluginNameFormBean implements Serializable,FormBean
+public class ModuleNameFormBean implements Serializable,FormBean
 {
-    @NotEmpty( message = "pluginwizard.error.plugin.name.notEmpty" )
-    @Pattern( regexp = "([a-z]*)", message = "pluginwizard.error.plugin.name.pattern" )
+    @NotEmpty( message = "pluginwizard.error.module.name.notEmpty" )    
+    @Pattern( regexp = "(^[a-z]+-[a-z]+$)", message = "pluginwizard.error.module.name.pattern" )
+    @Pattern( regexp = "([a-z-]*)", message = "pluginwizard.error.module.name.forbidden.caracters" )
+    @Pattern( regexp = "(^[^-].*[^-]$)", message = "pluginwizard.error.module.name.forbidden.pattern" )
     private String _strName;
 
     /**

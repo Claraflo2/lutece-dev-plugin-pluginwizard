@@ -36,4 +36,11 @@
         </application>
     </applications>
 
+  	<!-- Javascript files -->
+    
+    <javascript-files>
+        <javascript-files-scope>pluginwizard</javascript-files-scope>
+        <javascript-file>pluginwizard/validator.js</javascript-file>
+        <javascript-file>pluginwizard/pluralize.js</javascript-file>
+    </javascript-files>    
 </plug-in>

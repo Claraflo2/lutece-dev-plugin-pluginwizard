@@ -50,12 +50,14 @@ import fr.paris.lutece.util.ReferenceList;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Model Service provides all plugin'model manipulations
@@ -765,7 +767,8 @@ public final class ModelService
         pm.getPortlets( ).clear( );
         savePluginModel( pm );
     }
-
+    
+ 
     // //////////////////////////////////////////////////////////////////////////
     // BUSINESS CLASS ATTRIBUTES
     /**
@@ -802,7 +805,7 @@ public final class ModelService
             return null;
         }
     }
-
+    
     /**
      * Add an attribute to a business class
      *
@@ -920,7 +923,7 @@ public final class ModelService
         }
 
     }
-
+    
     // //////////////////////////////////////////////////////////////////////////
     // REST
     /**

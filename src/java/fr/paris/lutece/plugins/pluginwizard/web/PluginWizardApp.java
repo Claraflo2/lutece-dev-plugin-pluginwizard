@@ -34,6 +34,8 @@
 package fr.paris.lutece.plugins.pluginwizard.web;
 
 import fr.paris.lutece.plugins.pluginwizard.business.ConfigurationKey;
+
+
 import fr.paris.lutece.plugins.pluginwizard.business.ConfigurationKeyHome;
 import fr.paris.lutece.plugins.pluginwizard.business.ModelHome;
 import fr.paris.lutece.plugins.pluginwizard.business.model.Application;
@@ -49,7 +51,10 @@ import fr.paris.lutece.plugins.pluginwizard.service.QualityService;
 import fr.paris.lutece.plugins.pluginwizard.service.generator.GeneratorService;
 import fr.paris.lutece.plugins.pluginwizard.web.formbean.BusinessClassFormBean;
 import fr.paris.lutece.plugins.pluginwizard.web.formbean.DescriptionFormBean;
+import fr.paris.lutece.plugins.pluginwizard.web.formbean.FormBean;
+import fr.paris.lutece.plugins.pluginwizard.web.formbean.ModuleNameFormBean;
 import fr.paris.lutece.plugins.pluginwizard.web.formbean.PluginNameFormBean;
+import fr.paris.lutece.plugins.pluginwizard.web.formbean.WorkflowTaskNameFormBean;
 import fr.paris.lutece.portal.service.message.SiteMessageException;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.security.UserNotSignedException;
@@ -75,6 +80,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * The class manage pluginwizard Page
@@ -126,7 +132,12 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     private static final String TEMPLATE_CREATE_PLUGIN_APPLICATION = "/skin/plugins/pluginwizard/pluginwizard_create_application.html";
     private static final String TEMPLATE_CREATE_BUSINESS_CLASS = "/skin/plugins/pluginwizard/pluginwizard_create_business_class.html";
     private static final String TEMPLATE_CREATE_ATTRIBUTE = "/skin/plugins/pluginwizard/pluginwizard_create_attribute.html";
-
+    private static final String PARAM_PROJECT_TYPE = "project_type_selector";
+    private static final String PROJECT_TYPE_PLUGIN = "plugin";
+    private static final String PROJECT_TYPE_MODULE = "module";
+    private static final String PROJECT_TYPE_WORKFLOW_TASK = "workflowTask";
+    
+    
     // MODIFY
     private static final String TEMPLATE_MODIFY_ATTRIBUTE = "/skin/plugins/pluginwizard/pluginwizard_modify_attribute.html";
     private static final String TEMPLATE_MODIFY_ADMIN_FEATURE = "/skin/plugins/pluginwizard/pluginwizard_modify_admin_feature.html";
@@ -135,6 +146,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     private static final String TEMPLATE_MESSAGE_BOX_CONFIRMATION = "/skin/plugins/pluginwizard/message_confirmation.html";
     private static final String TEMPLATE_MESSAGE_BOX_EXISTS = "/skin/plugins/pluginwizard/message_exists.html";
     private static final String PARAM_ACTION = "action";
+    private static final String PARAM_VIEW = "view";
     private static final String PARAM_PAGE = "page";
     private static final String PARAM_FILE = "file";
     private static final String PARAM_BUSINESS_CLASS_ID = "business_class_id";
@@ -224,8 +236,22 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     public static final String ERROR_LOAD_PLUGIN = "pluginwizard.error.plugin.file";
     public static final String ERROR_MODULE_NAME = "pluginwizard.error.module.name.pattern";
     public static final String ERROR_PLUGIN_NAME = "pluginwizard.error.plugin.name.pattern";
-    public static final String ERROR_FEATURE_DUPLICATE = "pluginwizard.error.feature.right.duplicate";
-
+    public static final String ERROR_FEATURE_RIGHT_DUPLICATE = "pluginwizard.error.feature.right.duplicate";
+    public static final String ERROR_FEATURE_TECH_NAME_DUPLICATE = "pluginwizard.error.feature.name.duplicate";
+    public static final String ERROR_FEATURE_TITLE_DUPLICATE = "pluginwizard.error.feature.title.duplicate"; 
+    public static final String ERROR_INSUFFICIENT_ATTRIBUTES = "pluginwizard.error.attribute.insufficientAttributes";
+    public static final String ERROR_ATTRIBUTE_NAME_DUPLICATE = "pluginwizard.error.attribute.name.duplicate";
+    public static final String ERROR_BUSINESS_CLASS_NAME_DUPLICATE = "pluginwizard.error.businessClass.class.duplicate";
+	public static final String ERROR_BUSINESS_CLASS_TABLE_NAME_DUPLICATE = "pluginwizard.error.businessClass.tableName.duplicate";
+	public static final String ERROR_BUSINESS_CLASS_PLURAL_NAME_DUPLICATE= "pluginwizard.error.businessClass.pluralBusinessClass.duplicate";
+    public static final String ERROR_APPLICATION_NAME_DUPLICATE = "pluginwizard.error.application.name.duplicate";
+	public static final String ERROR_APPLICATION_CLASS_DUPLICATE = "pluginwizard.error.application.class.duplicate";
+    public static final String ERROR_FEATURE_NO_BUSINESS_CLASS= "pluginwizard.error.feature.businessClass.noBusinessClass";
+	public static final String ERROR_APPLICATION_NO_BUSINESS_CLASS= "pluginwizard.error.application.businessClass.noBusinessClass";
+	public static final String ERROR_PORTLET_CLASS_NAME_DUPLICATE = "pluginwizard.error.portlet.class.duplicate";
+	public static final String ERROR_PORTLET_TYPE_DUPLICATE = "pluginwizard.error.portlet.type.duplicate";
+	public static final String ERROR_PORTLET_JSP_NAME_DUPLICATE = "pluginwizard.error.portlet.jspBaseName.duplicate";
+	
     // NOTIFICATIONS
     public static final String INFO_SESSION_EXPIRED = "pluginwizard.info.sessionExpired";
     public static final String INFO_PLUGIN_CREATED = "pluginwizard.info.pluginCreated";
@@ -245,6 +271,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     public static final String INFO_PORTLET_CREATED = "pluginwizard.info.portlet.created";
     public static final String INFO_PORTLET_UPDATED = "pluginwizard.info.portlet.updated";
     public static final String INFO_PORTLET_DELETED = "pluginwizard.info.portlet.deleted";
+    
+    
     private int _nPluginId;
     private String _strPluginName;
     private DescriptionFormBean _description;
@@ -318,9 +346,10 @@ public class PluginWizardApp extends MVCApplication implements Serializable
      */
     @Action( ACTION_CREATE_PLUGIN )
     public XPage doCreatePlugin( HttpServletRequest request )
-    {
-        PluginNameFormBean form = new PluginNameFormBean( );
-        populate( form, request );
+    {	
+    	
+        FormBean form = getFormBean(request);
+    	populate( form, request );
 
         if ( !validateBean( form, getLocale( request ) ) )
         {
@@ -351,7 +380,30 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         return redirectMessageBox( request, buildExistsMessageBox( ) );
     }
 
-    /**
+    private FormBean getFormBean(HttpServletRequest request) {
+		
+    	String projectType = request.getParameter( PARAM_PROJECT_TYPE );
+    	
+    	if(StringUtils.isBlank(projectType) || StringUtils.equals(projectType, PROJECT_TYPE_PLUGIN ))
+    	{
+    		return new PluginNameFormBean();
+    	}
+    	else if(StringUtils.equals(projectType, PROJECT_TYPE_MODULE) ) 
+    	{
+    		return new ModuleNameFormBean();
+    	}
+    	else if(StringUtils.equals(projectType, PROJECT_TYPE_WORKFLOW_TASK) ) 
+    	{
+    		return new WorkflowTaskNameFormBean();
+    	}
+    	else 
+    	{
+    		return new PluginNameFormBean();	
+    	}
+		
+	}
+
+	/**
      * The load action of the plugin
      *
      * @param request
@@ -475,7 +527,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 
         if ( _description.getPluginName( ).contains( "-" ) )
         {
-            if ( !_description.getPluginName( ).matches( "[a-z]*-[a-z]*" ) )
+            if ( !_description.getPluginName( ).matches( "^[a-z]+-[a-z]+$" ) )
             {
                 addError( ERROR_MODULE_NAME, getLocale( request ) );
                 return redirectView( request, VIEW_MODIFY_DESCRIPTION );
@@ -566,11 +618,11 @@ public class PluginWizardApp extends MVCApplication implements Serializable
             _feature = ModelService.getFeature( _nPluginId, nFeatureId );
         }
 
-        Map<String, Object> model = getModel( );
+        Map<String, Object> model = getPluginModel( );
         model.put( MARK_FEATURE, _feature );
         model.put( MARK_ADMIN_FEATURES, pm.getFeatures( ) );
         model.put( MARK_BUSINESS_CLASSES_COMBO, ModelService.getComboBusinessClasses( _nPluginId ) );
-
+        
         return getXPage( TEMPLATE_MODIFY_ADMIN_FEATURE, getLocale( request ), model );
     }
 
@@ -587,16 +639,26 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         populate( _feature, request );
 
         List<Integer> listBusinessClasses = getBusinessClasses( request );
-        _feature.setIdBusinessClasses( listBusinessClasses );
-
-        if ( !validateBean( _feature, getLocale( request ) ) )
+        
+        //Case where no business class is selected
+        if( listBusinessClasses.isEmpty( ) )
         {
+        	addError( ERROR_FEATURE_NO_BUSINESS_CLASS, getLocale( request ) );
+        	return redirectView( request, VIEW_CREATE_ADMIN_FEATURE );
+        }
+        
+        _feature.setIdBusinessClasses( listBusinessClasses );
+        
+        if ( !validateBean( _feature, getLocale( request ) ) )
+        {	
+        	
             return redirectView( request, VIEW_CREATE_ADMIN_FEATURE );
         }
-               
-        else if ( QualityService.existsDuplicateFeatureRight( _feature, ModelService.getPluginModel(_nPluginId).getFeatures()))
-        {
-        	addError(ERROR_FEATURE_DUPLICATE, getLocale( request ));
+            
+        else if ( QualityService.existsDuplicateFeatureFields( _feature, ModelService.getPluginModel(_nPluginId).getFeatures()))
+        {	
+ 
+        	addDupplicateAdminFeatureErrorMessages( request );
         	return redirectView( request, VIEW_CREATE_ADMIN_FEATURE );
         }
 
@@ -609,7 +671,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 	        return redirectView( request, VIEW_MANAGE_ADMIN_FEATURES );
         }
     }
-
+    
     /**
      * The modification action of an admin _feature
      *
@@ -623,6 +685,14 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         populate( _feature, request );
 
         List<Integer> listBusinessClasses = getBusinessClasses( request );
+        
+        //Case where no business class is selected
+        if( listBusinessClasses.isEmpty( ) )
+        {
+        	addError( ERROR_FEATURE_NO_BUSINESS_CLASS, getLocale( request ) );
+        	return redirect( request, VIEW_MODIFY_ADMIN_FEATURE, PARAM_FEATURE_ID, _feature.getId( ) );
+        }
+        
         _feature.setIdBusinessClasses( listBusinessClasses );
         
         if ( !validateBean( _feature, getLocale( request ) ) )
@@ -630,9 +700,10 @@ public class PluginWizardApp extends MVCApplication implements Serializable
             return redirect( request, VIEW_MODIFY_ADMIN_FEATURE, PARAM_FEATURE_ID, _feature.getId( ) );
         }
                 
-        else if ( QualityService.existsDuplicateFeatureRight( _feature, ModelService.getPluginModel(_nPluginId).getFeatures()))
-        {
-        	addError(ERROR_FEATURE_DUPLICATE, getLocale( request ));
+        else if ( QualityService.existsDuplicateFeatureFields( _feature, ModelService.getPluginModel(_nPluginId).getFeatures()))
+        {	
+        	
+        	addDupplicateAdminFeatureErrorMessages( request );
         	return redirect( request, VIEW_MODIFY_ADMIN_FEATURE, PARAM_FEATURE_ID, _feature.getId( ) );
         }
 
@@ -645,7 +716,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
             return redirectView( request, VIEW_MANAGE_ADMIN_FEATURES );	
         }
     }
-
+    
     /**
      * The confirmation of the removal of an admin _feature
      *
@@ -682,6 +753,33 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 
         return redirectView( request, VIEW_MANAGE_ADMIN_FEATURES );
     }
+    
+    /**
+     * Add error duplicate admin feature messages to request 
+     *    
+     * @param request
+     *            The Http Request
+     */
+	
+	private void addDupplicateAdminFeatureErrorMessages(HttpServletRequest request) 
+    {
+
+		if ( !QualityService.bValideUniqueFeatureTitle ) 
+		{
+			addError( ERROR_FEATURE_TITLE_DUPLICATE, getLocale(request) );
+		}
+
+		if ( !QualityService.bValideUniqueFeatureTechName ) 
+		{
+			addError( ERROR_FEATURE_TECH_NAME_DUPLICATE, getLocale(request) );
+		}
+
+		if ( !QualityService.bValideUniqueFeatureRight ) 
+		{
+			addError( ERROR_FEATURE_RIGHT_DUPLICATE, getLocale(request) );
+		}
+
+	}
 
     // //////////////////////////////////////////////////////////////////////////
     // BUSINESS CLASSES
@@ -763,9 +861,14 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         boolean bValidateBean = validateBean( _businessClass, getLocale( request ) );
         boolean bValidateTablePrefix = validateTablePrefix( request, _businessClass );
         boolean bValid = bValidateBean && bValidateTablePrefix;
-
+        
         if ( !bValid )
-        {
+        {	
+            return redirectView( request, VIEW_CREATE_BUSINESS_CLASS );
+        }
+        else if ( QualityService.existsDuplicateBusinessClassFields( _businessClass, ModelService.getPluginModel(_nPluginId).getBusinessClasses( ) ) ) 
+        {	
+        	addDupplicateBusinessClassErrorMessages( request );
             return redirectView( request, VIEW_CREATE_BUSINESS_CLASS );
         }
 
@@ -775,7 +878,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 
         return redirect( request, VIEW_MODIFY_BUSINESS_CLASS, PARAM_BUSINESS_CLASS_ID, businessClass.getId( ) );
     }
-
+   
     /**
      * The modification action for the business class
      *
@@ -790,11 +893,21 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 
         boolean bValidateBean = validateBean( _businessClass, getLocale( request ) );
         boolean bValidateTablePrefix = validateTablePrefix( request, _businessClass );
-        boolean bValid = bValidateBean && bValidateTablePrefix;
-
-        if ( !bValid )
-        {
+        boolean bValid = bValidateBean && bValidateTablePrefix;    	
+    	
+        if ( !bValid)
+        {	
             return redirect( request, VIEW_MODIFY_BUSINESS_CLASS, PARAM_BUSINESS_CLASS_ID, _businessClass.getId( ) );
+        }
+        else if( ModelService.getBusinessClass( _nPluginId, _businessClass.getId( ) ).getAttributes().size() < 1 )
+        {
+        	addError(ERROR_INSUFFICIENT_ATTRIBUTES, getLocale(request));
+        	return redirect( request, VIEW_MODIFY_BUSINESS_CLASS, PARAM_BUSINESS_CLASS_ID, _businessClass.getId( ) );
+        }
+        else if ( QualityService.existsDuplicateBusinessClassFields( _businessClass, ModelService.getPluginModel(_nPluginId).getBusinessClasses( ) ) ) 
+        {	
+        	addDupplicateBusinessClassErrorMessages( request );
+        	return redirect( request, VIEW_MODIFY_BUSINESS_CLASS, PARAM_BUSINESS_CLASS_ID, _businessClass.getId( ) );
         }
 
         ModelService.updateBusinessClass( _nPluginId, _businessClass );
@@ -825,7 +938,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 
         return bValidate;
     }
-
+    
     /**
      * The confirmation of a business class removal
      *
@@ -864,7 +977,34 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 
         return redirectView( request, VIEW_MANAGE_BUSINESS_CLASSES );
     }
-
+    
+    /**
+     * Add error duplicate business class messages to request 
+     *    
+     * @param request
+     *            The Http Request
+     */
+    
+	private void addDupplicateBusinessClassErrorMessages(HttpServletRequest request) 
+	{
+		
+		if ( !QualityService.bValidUniqueBusinessClassName ) 
+		{
+			addError( ERROR_BUSINESS_CLASS_NAME_DUPLICATE, getLocale(request) );
+		}
+		
+		if ( !QualityService.bValidUniquePluralBusinessClassName ) 
+		{
+			addError( ERROR_BUSINESS_CLASS_PLURAL_NAME_DUPLICATE, getLocale(request) );
+		}
+		
+		if( !QualityService.bValidUniqueTableName ) 
+        {
+            addError( ERROR_BUSINESS_CLASS_TABLE_NAME_DUPLICATE, getLocale(request) );
+        }
+				
+	}
+	
     // //////////////////////////////////////////////////////////////////////////
     // ATTRIBUTE
 
@@ -932,19 +1072,24 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     {
         int nBusinessClassId = Integer.parseInt( request.getParameter( PARAM_BUSINESS_CLASS_ID ) );
         populate( _attribute, request );
-
+        
         if ( !validateBean( _attribute, getLocale( request ) ) )
         {
             return redirect( request, VIEW_CREATE_ATTRIBUTE, PARAM_BUSINESS_CLASS_ID, nBusinessClassId, PARAM_ATTRIBUTE_ID, _attribute.getId( ) );
         }
-
+		else if (QualityService.existsDuplicateAttributeFields(_attribute, ModelService.getBusinessClass(_nPluginId, nBusinessClassId).getAttributes())) {
+			
+			addError( ERROR_ATTRIBUTE_NAME_DUPLICATE, getLocale(request) );
+			return redirect(request, VIEW_CREATE_ATTRIBUTE, PARAM_BUSINESS_CLASS_ID, nBusinessClassId, PARAM_ATTRIBUTE_ID, _attribute.getId());
+		}
+        
         ModelService.addAttribute( _nPluginId, nBusinessClassId, _attribute );
         _attribute = null;
         addInfo( INFO_ATTRIBUTE_CREATED, getLocale( request ) );
 
         return redirect( request, VIEW_MODIFY_BUSINESS_CLASS, PARAM_BUSINESS_CLASS_ID, nBusinessClassId, PARAM_REFRESH, 1 );
     }
-
+    
     /**
      * The modification action for the attribute
      *
@@ -959,11 +1104,16 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         // We reset boolean values provided by checkboxes : chabowes not checked can not be populated.
         _attribute.setNotNull( false );
         populate( _attribute, request );
-
+        
         if ( !validateBean( _attribute, getLocale( request ) ) )
         {
             return redirect( request, VIEW_MODIFY_ATTRIBUTE, PARAM_BUSINESS_CLASS_ID, nBusinessClassId, PARAM_ATTRIBUTE_ID, _attribute.getId( ) );
         }
+        else if (QualityService.existsDuplicateAttributeFields(_attribute, ModelService.getBusinessClass(_nPluginId, nBusinessClassId).getAttributes())) {
+			
+        	addError( ERROR_ATTRIBUTE_NAME_DUPLICATE, getLocale(request) );
+			return redirect(request, VIEW_MODIFY_ATTRIBUTE, PARAM_BUSINESS_CLASS_ID, nBusinessClassId, PARAM_ATTRIBUTE_ID, _attribute.getId());
+		}
 
         ModelService.updateAttribute( _nPluginId, nBusinessClassId, _attribute );
         _attribute = null;
@@ -987,9 +1137,16 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         url.addParameter( PARAM_ACTION, ACTION_REMOVE_ATTRIBUTE );
         url.addParameter( PARAM_ATTRIBUTE_ID, request.getParameter( PARAM_ATTRIBUTE_ID ) );
         url.addParameter( PARAM_BUSINESS_CLASS_ID, request.getParameter( PARAM_BUSINESS_CLASS_ID ) );
+        
+        UrlItem urlBack = new UrlItem( JSP_PAGE_PORTAL );
+        urlBack.addParameter( PARAM_PAGE, PLUGIN_NAME );
+        urlBack.addParameter( PARAM_VIEW, VIEW_MODIFY_BUSINESS_CLASS );
+        urlBack.addParameter( PARAM_BUSINESS_CLASS_ID, request.getParameter( PARAM_BUSINESS_CLASS_ID ) );
+        
+        
 
         return redirectMessageBox( request,
-                buildConfirmMessageBox( PROPERTY_CONFIRM_REMOVE_ATTRIBUTE_MESSAGE, url.getUrl( ), getViewFullUrl( VIEW_MODIFY_BUSINESS_CLASS ) ) );
+                buildConfirmMessageBox( PROPERTY_CONFIRM_REMOVE_ATTRIBUTE_MESSAGE, url.getUrl( ), urlBack.getUrl() ) );
     }
 
     /**
@@ -1004,17 +1161,27 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     {
         int nBusinessClassId = Integer.parseInt( request.getParameter( PARAM_BUSINESS_CLASS_ID ) );
         int nAttributeId = Integer.parseInt( request.getParameter( PARAM_ATTRIBUTE_ID ) );
+        
         ModelService.removeAttribute( _nPluginId, nBusinessClassId, nAttributeId );
         addInfo( INFO_ATTRIBUTE_DELETED, getLocale( request ) );
 
         return redirect( request, VIEW_MODIFY_BUSINESS_CLASS, PARAM_BUSINESS_CLASS_ID, nBusinessClassId, PARAM_REFRESH, 1 );
     }
-
+    
     @Action( ACTION_VALIDATE_ATTRIBUTES )
     public XPage doValidateAttributes( HttpServletRequest request )
-    {
-        return redirectView( request, VIEW_MANAGE_BUSINESS_CLASSES );
+    {	
+    	int nBusinessClassId = Integer.parseInt( request.getParameter( PARAM_BUSINESS_CLASS_ID ) );
+
+        if( ModelService.getBusinessClass( _nPluginId, nBusinessClassId ).getAttributes().size() < 1 )
+        {
+        	addError(ERROR_INSUFFICIENT_ATTRIBUTES, getLocale(request));
+        	return redirect( request, VIEW_MODIFY_BUSINESS_CLASS, PARAM_BUSINESS_CLASS_ID, _businessClass.getId( ) );
+        }
+        
+    		return redirect( request, VIEW_MANAGE_BUSINESS_CLASSES, PARAM_BUSINESS_CLASS_ID, nBusinessClassId );
     }
+
 
     // //////////////////////////////////////////////////////////////////////////
     // APPLICATION
@@ -1097,12 +1264,26 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         populate( _application, request );
 
         List<Integer> listBusinessClasses = getBusinessClasses( request );
-        _application.setIdBusinessClasses( listBusinessClasses );
-
-        if ( !validateBean( _application, getLocale( request ) ) )
+        
+        //Case where no business class has been checked
+        if( listBusinessClasses.isEmpty( ) )
         {
+        	addError(ERROR_APPLICATION_NO_BUSINESS_CLASS, getLocale(request));
+        	return redirectView( request, VIEW_CREATE_APPLICATION );
+        }
+        
+        _application.setIdBusinessClasses( listBusinessClasses );
+        
+        if ( !validateBean( _application, getLocale( request ) ) )
+        {	
             return redirectView( request, VIEW_CREATE_APPLICATION );
         }
+        
+	    else if ( QualityService.existsDuplicateApplicationFields( _application, ModelService.getPluginModel(_nPluginId).getApplications()))
+	    {	
+	    	addDupplicateApplicationErrorMessages( request );
+	    	return redirectView( request, VIEW_CREATE_APPLICATION );
+	    }
 
         ModelService.addApplication( _nPluginId, _application );
         _application = null;
@@ -1124,12 +1305,25 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         populate( _application, request );
 
         List<Integer> listBusinessClasses = getBusinessClasses( request );
+        
+        if( listBusinessClasses.isEmpty( ) )
+        {
+        	addError( ERROR_APPLICATION_NO_BUSINESS_CLASS, getLocale(request) );
+        	return redirect( request, VIEW_MODIFY_APPLICATION, PARAM_APPLICATION_ID, _application.getId( ) );
+        }
+        
         _application.setIdBusinessClasses( listBusinessClasses );
-
+        
+        
         if ( !validateBean( _application, getLocale( request ) ) )
         {
             return redirect( request, VIEW_MODIFY_APPLICATION, PARAM_APPLICATION_ID, _application.getId( ) );
         }
+        else if ( QualityService.existsDuplicateApplicationFields( _application, ModelService.getPluginModel(_nPluginId).getApplications()))
+	    {	
+	    	addDupplicateApplicationErrorMessages( request );
+	    	return redirect( request, VIEW_MODIFY_APPLICATION, PARAM_APPLICATION_ID, _application.getId( ) );
+	    }
 
         ModelService.updateApplication( _nPluginId, _application );
         _application = null;
@@ -1172,6 +1366,28 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         addInfo( INFO_APPLICATION_DELETED, getLocale( request ) );
 
         return redirectView( request, VIEW_MANAGE_APPLICATIONS );
+    }
+    
+    /**
+     * Add error duplicate application messages to request 
+     *    
+     * @param request
+     *            The Http Request
+     */
+				
+	private void addDupplicateApplicationErrorMessages(HttpServletRequest request) 
+    {
+					
+		if ( !QualityService.bValideUniqueAdministrationName ) 
+		{
+			addError( ERROR_APPLICATION_NAME_DUPLICATE, getLocale(request) );
+		}
+		
+		if( !QualityService.bValideUniqueAdministrationClass ) 
+		{
+			addError( ERROR_APPLICATION_CLASS_DUPLICATE, getLocale(request) );
+		}
+				
     }
 
     // //////////////////////////////////////////////////////////////////////////
@@ -1251,6 +1467,12 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         {
             return redirectView( request, VIEW_CREATE_PORTLET );
         }
+        else if ( QualityService.existsDuplicatePortletFields( _portlet, ModelService.getPluginModel(_nPluginId).getPortlets()))
+        {	
+ 
+        	addDupplicatePortletErrorMessages( request );
+        	return redirectView( request, VIEW_CREATE_PORTLET );
+        }
 
         ModelService.addPortlet( _nPluginId, _portlet );
         _portlet = null;
@@ -1274,6 +1496,12 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         if ( !validateBean( _portlet, getLocale( request ) ) )
         {
             return redirect( request, ACTION_MODIFY_PORTLET, PARAM_PORTLET_ID, _portlet.getId( ) );
+        }
+        else if ( QualityService.existsDuplicatePortletFields( _portlet, ModelService.getPluginModel(_nPluginId).getPortlets()))
+        {	
+ 
+        	addDupplicatePortletErrorMessages( request );
+        	return redirect( request, ACTION_MODIFY_PORTLET, PARAM_PORTLET_ID, _portlet.getId( ) );
         }
 
         ModelService.updatePortlet( _nPluginId, _portlet );
@@ -1319,6 +1547,33 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         return redirectView( request, VIEW_MANAGE_PORTLETS );
     }
 
+	
+    /**
+     * Add error duplicate portlet messages to request 
+     *    
+     * @param request
+     *            The Http Request
+     */
+	
+    private void addDupplicatePortletErrorMessages(HttpServletRequest request) 
+    {
+				
+		if ( !QualityService.bValideUniquePortletClassName ) 
+		{
+			addError( ERROR_PORTLET_CLASS_NAME_DUPLICATE, getLocale(request) );
+		}
+		
+		if( !QualityService.bValideUniquePortletType ) 
+		{
+			addError( ERROR_PORTLET_TYPE_DUPLICATE, getLocale(request) );
+		}
+		if( !QualityService.bValideUniquePortletJspName ) 
+		{
+			addError( ERROR_PORTLET_JSP_NAME_DUPLICATE, getLocale(request) );
+		}
+
+    }
+    
     /**
      * The get page of the plugin recapitulation
      *
@@ -1504,4 +1759,5 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 
         return redirectView( request, VIEW_RECAPITULATE );
     }
+    	
 }

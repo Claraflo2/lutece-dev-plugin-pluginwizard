@@ -21,7 +21,7 @@
 				    
 		            <!-- Card Content-->
 					<div class="col-md-9">
-						<form class="form-horizontal" method="post" action="jsp/site/Portal.jsp">
+						<form id="create-plugin-form" class="form-horizontal" method="post" action="jsp/site/Portal.jsp">
 							<fieldset>
 								<legend style="border-bottom: 1px solid #e5e5e5;">
 									#i18n{pluginwizard.pluginwizard_create_plugin.pageTitle}
@@ -31,10 +31,9 @@
 								<#include "infos_handler.html" />
 								
 								<div class="float-end">
-									<img src="images/local/skin/java.png" alt="Java logo"
-										width="80" /> <strong>OR</strong> <img
-										src="images/local/skin/kotlin.png" alt="Kotlin logo"
-										width="80" />
+									<img src="images/local/skin/java.png" alt="Java logo" width="80" /> 
+									<!--<strong>OR</strong> 
+									<img src="images/local/skin/kotlin.png" alt="Kotlin logo" width="80" />-->
 								</div>
 								
 								<input type="hidden" name="page" value="pluginwizard" />
@@ -64,19 +63,35 @@
 								<div class="mb-3 p-3 border rounded bg-light">
 									<h4>#i18n{pluginwizard.pluginwizard_create_plugin.createPlugin}</h4>
 									<div class="row">
-										<label class="col-md-3 col-form-label">
-											#i18n{pluginwizard.pluginwizard_create_plugin.labelPluginName} : 
-										</label>
-										<div class="col-md-5">
-											<input type="text" class="form-control" name="name" value="" /> 
-												<span class="text-muted">
-													#i18n{pluginwizard.pluginwizard_create_plugin.labelPluginNameHelp}
-												</span>
+										
+										<div class="col mb-3 align-items-center">
+		                                    <div class="col-md-10">
+		                                    	<div class="form-check">
+											    	<input type="radio" id="id-project-type-plugin" name="project_type_selector" class="form-check-input" value="plugin" checked>
+											    	<label class="form-check-label" for="id-project-type-plugin">
+											      		#i18n{pluginwizard.pluginwizard_create_plugin.OptionPlugin}
+											    	</label>
+											  	</div>
+											  	<div class="form-check">
+											    	<input type="radio" id="id-project-type-module" name="project_type_selector" class="form-check-input" value="module">
+											    	<label class="form-check-label" for="id-project-type-module">
+											      		#i18n{pluginwizard.pluginwizard_create_plugin.OptionModule}
+											    	</label>
+											  	</div> 
+		                                    </div>
+	                                	</div>
+	                                	
+										<div class="col-md-7">
+											<input type="text" id="projectName-input" name="name" class="form-control" placeholder="#i18n{pluginwizard.pluginwizard_create_plugin.placeholderPluginName}" aria-describedby="projectName-help-message-div"/> 
+											<div id="projectName-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">
+												<span id="mandatory-help-message-span" class="d-block"><i id="mandatory-help-icon" class="mx-1"></i> #i18n{pluginwizard.pluginwizard_create_plugin.helpRulesMandatoryPluginName}</span>
+												<span id="pluginName-help-message-span" class="d-block"><i id="pluginName-help-icon" class="mx-1"></i> #i18n{pluginwizard.pluginwizard_create_plugin.helpRulesPluginName}</span>
+											</div>
 										</div>
-										<div class="col-md-4">
-											<input class="btn btn-primary" name="do_create_plugin"
+										<div class="col-md-2">
+											<input type="submit" name="do_create_plugin" class="btn btn-primary" 
 												value="#i18n{pluginwizard.pluginwizard_create_plugin.buttonCreatePlugin}"
-												type="submit" />
+											/>
 										</div>
 									</div>
 								</div>
@@ -85,23 +100,24 @@
 						</form>
 						
 						<!-- Load config section -->
-						<form action="jsp/site/Portal.jsp" class="form-horizontal"
-							method="post" enctype="multipart/form-data">
-							<input type="hidden" name="page" value="pluginwizard" /> <input
-								type="hidden" name="action" value="loadPlugin" />
+						<form  class="form-horizontal" method="post"
+							action="jsp/site/Portal.jsp" enctype="multipart/form-data">
+							<input type="hidden" name="page" value="pluginwizard" /> 
+							<input type="hidden" name="action" value="loadPlugin" />
 	
 							<div class="mb-3 p-3 border rounded bg-light">
 								<h4>#i18n{pluginwizard.pluginwizard_create_plugin.loadPlugin}</h4>
 								<div class="row">
-									<label class="col-md-3 col-form-label">#i18n{pluginwizard.pluginwizard_create_plugin.labelPluginLoad}
-										: </label>
+									<label class="col-md-3 col-form-label">
+										#i18n{pluginwizard.pluginwizard_create_plugin.labelPluginLoad} : 
+									</label>
 									<div class="col-md-5">
 										<input type="file" id="file" name="file" />
 									</div>
 									<div class="col-md-4">
-										<input class="btn btn-primary" name="do_load_plugin"
+										<input type="submit" name="do_load_plugin" class="btn btn-primary"
 											value="#i18n{pluginwizard.pluginwizard_create_plugin.buttonLoadPlugin}"
-											type="submit" />
+										/>
 									</div>
 								</div>
 							</div>
@@ -113,3 +129,33 @@
 		</div>
 	</div>
 </div>
+
+<script src='js/plugins/pluginwizard/validator.js'></script>
+
+ <script>
+ 	
+	const dictionnaryHelperMessage = {
+	 	"plugin": {
+	 		"placeholder": "#i18n{pluginwizard.pluginwizard_create_plugin.placeholderPluginName}",
+	 		"mandatory": "#i18n{pluginwizard.pluginwizard_create_plugin.helpRulesMandatoryPluginName}",
+	 		"pluginName": "#i18n{pluginwizard.pluginwizard_create_plugin.helpRulesPluginName}"
+	 	},
+	 	"module": {
+	 		"placeholder": "#i18n{pluginwizard.pluginwizard_create_plugin.placeholderModuleName}",
+	 		"mandatory": "#i18n{pluginwizard.pluginwizard_create_plugin.helpRulesMandatoryModuleName}",
+	 		"moduleName": "#i18n{pluginwizard.pluginwizard_create_plugin.helpRulesModuleName}",
+	 		"conventionModuleName" : "#i18n{pluginwizard.pluginwizard_create_plugin.helpRulesConventionModuleName}"
+	 	}
+	 }
+			
+	//Update the form front 
+	switchTypeProject('create-plugin-form');
+	
+	//Listerners
+	document.getElementById('create-plugin-form').addEventListener('input', function(event){validationForm(event);});
+	document.querySelectorAll('input[name="project_type_selector"]').forEach(button => {
+	  button.addEventListener('change', function(){ switchTypeProject('create-plugin-form');
+	  });
+	});
+   
+ </script>
