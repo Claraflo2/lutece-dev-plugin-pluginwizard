@@ -84,9 +84,20 @@ public class AdminTemplateGenerator extends AbstractGenerator
                 Feature admin_feature = ModelService.getFeatureByBusinessClass( pm, businessClass.getId( ) );
 
                 for ( int i = 0; i < _template_prefix.length; i++ )
-                {
-                    String strSuffix = ( i == 2 ) ? "s.html" : ".html";
-                    String strPath = getFilePath( pm, PATH, _template_prefix [i] + businessClass.getBusinessClass( ).toLowerCase( ) + strSuffix );
+                {   
+                    String strPath = "";
+                    String strSuffix = ".html";
+                    
+                    //manage files case where plural business name is used 
+                    if ( i == 2 )
+                    {
+                        strPath = getFilePath( pm, PATH, _template_prefix [i] + businessClass.getPluralBusinessClass( ).toLowerCase( ) + strSuffix );
+                    }
+                    else
+                    {
+                        strPath = getFilePath( pm, PATH, _template_prefix [i] + businessClass.getBusinessClass( ).toLowerCase( ) + strSuffix );
+                    }
+                    
 
                     String strSourceCode = getCreateHtmlCode( listBusinessClasses, admin_feature, businessClass, i, strPluginName, strLink );
                     map.put( strPath, strSourceCode );

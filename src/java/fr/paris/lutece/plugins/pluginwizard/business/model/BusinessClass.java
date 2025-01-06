@@ -239,6 +239,21 @@ public class BusinessClass
         return String.valueOf( characters );
     }
 
+
+    /**
+     * Returns the BusinessClass
+     *
+     * @return The BusinessClass
+     */
+    @JsonIgnore
+    public String getPluralBusinessClassCapsFirst( )
+    {
+        char [ ] characters = _strPluralBusinessClass.toCharArray( );
+        characters [0] = Character.toTitleCase( characters [0] );
+
+        return String.valueOf( characters );
+    }
+
     /**
      * Returns the InstanceName
      *
