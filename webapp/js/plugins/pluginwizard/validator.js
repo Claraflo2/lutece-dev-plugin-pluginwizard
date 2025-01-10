@@ -6,6 +6,7 @@
 	"moduleName": /^[a-z-]+$/,
 	"conventionModuleName": /^[a-z]+-[a-z]+$/,
 	"workflowTaskName": /^[a-z-]+$/,
+	"conventionWorkflowTaskName": /^[a-z]+-[a-z]+$/,
 	"pluginDescription": /^.{5,255}$/,
 	"pluginProvider": /^.{3,255}$/,
 	"pluginVersion": /^\d\.\d\.\d$/,
@@ -244,38 +245,31 @@ function switchTypeProject(strPluginFormId)
 		
 		if(dictionnaryHelperMessage.hasOwnProperty(projectType))
 		{
-	 		if (projectType === 'plugin' || projectType === 'module')
-	 		{	
-				//Update input
-	 			projectNameInput.placeholder = dictionnaryHelperMessage[projectType].hasOwnProperty('placeholder')?dictionnaryHelperMessage[projectType]['placeholder']:'';
 
-				//Update help message
-				helpMessageDiv.innerHTML = '';
-				Object.entries(dictionnaryHelperMessage[projectType]).forEach(([key, value]) => {
-					
-					if(key!=='placeholder'){
-						const newSpan = document.createElement("span");
-			 			const newIcon = document.createElement("i");
-			 			const textNode = document.createTextNode(value);
-			 	   	  		
-			 			newSpan.id = key+'-help-message-span';
-			 			newIcon.id = key+'-help-icon';
-			 	   	  	
-						newIcon.classList.add('mx-1');
-							
-			 			newSpan.appendChild(newIcon);
-			 			newSpan.appendChild(textNode);
-			 	   	  		
-			 			helpMessageDiv.appendChild(newSpan);	
-					}
-					
-		       });
-		   	}
-		   	else
-		   	{
-				projectNameInput.placeholder = '';
-				helpMessageDiv.innerHTML = '';
-		   	}
+			//Update input
+ 			projectNameInput.placeholder = dictionnaryHelperMessage[projectType].hasOwnProperty('placeholder')?dictionnaryHelperMessage[projectType]['placeholder']:'';
+
+			//Update help message
+			helpMessageDiv.innerHTML = '';
+			Object.entries(dictionnaryHelperMessage[projectType]).forEach(([key, value]) => {
+				
+				if(key!=='placeholder'){
+					const newSpan = document.createElement("span");
+		 			const newIcon = document.createElement("i");
+		 			const textNode = document.createTextNode(value);
+		 	   	  		
+		 			newSpan.id = key+'-help-message-span';
+		 			newIcon.id = key+'-help-icon';
+		 	   	  	
+					newIcon.classList.add('mx-1');
+						
+		 			newSpan.appendChild(newIcon);
+		 			newSpan.appendChild(textNode);
+		 	   	  		
+		 			helpMessageDiv.appendChild(newSpan);	
+				}
+				
+	       });
 		}
 		else
 		{	
