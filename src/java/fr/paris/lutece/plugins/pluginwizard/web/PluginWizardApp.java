@@ -108,7 +108,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     private static final String MARK_ATTRIBUTE_TYPE_COMBO = "combo_attribute_type";
     private static final String MARK_SCHEMES_COMBO = "combo_schemes";
     private static final String MARK_ATTRIBUTES_LIST = "attributes_list";
-
+    private static final String MARK_PROJECT_TYPE = "project_type";
+    
     // Modification bookmarks
     private static final String MARK_FEATURE = "feature";
     private static final String MARK_ATTRIBUTE = "attribute";
@@ -132,10 +133,10 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     private static final String TEMPLATE_CREATE_PLUGIN_APPLICATION = "/skin/plugins/pluginwizard/pluginwizard_create_application.html";
     private static final String TEMPLATE_CREATE_BUSINESS_CLASS = "/skin/plugins/pluginwizard/pluginwizard_create_business_class.html";
     private static final String TEMPLATE_CREATE_ATTRIBUTE = "/skin/plugins/pluginwizard/pluginwizard_create_attribute.html";
-    private static final String PARAM_PROJECT_TYPE = "project_type_selector";
+    private static final String PARAM_PROJECT_TYPE = "type";
     private static final String PROJECT_TYPE_PLUGIN = "plugin";
     private static final String PROJECT_TYPE_MODULE = "module";
-    private static final String PROJECT_TYPE_WORKFLOW_TASK = "workflowTask";
+    private static final String PROJECT_TYPE_WORKFLOW_TASK = "workflowtask";
     
     
     // MODIFY
@@ -275,6 +276,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     
     private int _nPluginId;
     private String _strPluginName;
+    private String _strProjectType;
     private DescriptionFormBean _description;
     private Feature _feature;
     private BusinessClassFormBean _businessClass;
@@ -367,16 +369,18 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         {
             _nPluginId = -1;
         }
-
+        
+        // The plugin doesn't exists
         if ( _nPluginId == -1 )
         {
-            // The plugin doesn't exists
+        	
             addInfo( INFO_PLUGIN_CREATED, getLocale( request ) );
             _nPluginId = ModelService.createModel( form.getName( ) );
-
+            _strProjectType = form.getType( );
+                        
             return redirectView( request, VIEW_CREATE_DESCRIPTION );
         }
-
+        
         return redirectMessageBox( request, buildExistsMessageBox( ) );
     }
 
@@ -384,7 +388,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 		
     	String projectType = request.getParameter( PARAM_PROJECT_TYPE );
     	
-    	if(StringUtils.isBlank(projectType) || StringUtils.equals(projectType, PROJECT_TYPE_PLUGIN ))
+    	if( StringUtils.equals(projectType, PROJECT_TYPE_PLUGIN ))
     	{
     		return new PluginNameFormBean();
     	}
@@ -439,7 +443,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         ModelService.removeAll( _nPluginId );
         addInfo( INFO_DATA_RESET, getLocale( request ) );
 
-        return redirectView( request, VIEW_CREATE_DESCRIPTION );
+        return redirectView( request, VIEW_CREATE_PLUGIN );
     }
 
     // //////////////////////////////////////////////////////////////////////////
@@ -465,7 +469,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         }
 
         model.put( MARK_PLUGIN_ID, _nPluginId );
-
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
         return getXPage( TEMPLATE_CREATE_PLUGIN_DESCRIPTION, getLocale( request ), model );
     }
 

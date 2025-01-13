@@ -29,7 +29,7 @@
 
                             	<input type="hidden" name="page" value="pluginwizard" />
                             	<input type="hidden" name="id_plugin" value="${plugin_id}" />
-
+								
                                 <!-- Group form Plugin Name -->
                                 <div class="row mb-3 d-flex align-items-center">
                                     <label class="col-form-label col-md-2 text-end">
@@ -47,10 +47,10 @@
                                     </label>
                                     <div class="col-md-10">
                                         <input class="form-control" type="text" name="type"
-                                               value=<#if (
-                                                    (plugin_model.type?? && plugin_model.type == 'MODULE') || 
-                                                    (plugin_model.pluginName?? && plugin_model.pluginName?contains('-'))
-                                                    )> #i18n{pluginwizard.pluginwizard_create_plugin_description.labelModule}
+                                               value=<#if (project_type?? && project_type == 'MODULE')> 
+                                         				#i18n{pluginwizard.pluginwizard_create_plugin_description.labelModule}
+                                         			<#elseif (project_type?? && project_type == 'WORKFLOWTASK')>
+                                         			    #i18n{pluginwizard.pluginwizard_create_plugin_description.labelWorkflowTask}		
                                                     <#else> #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPlugin} </#if> readonly
                                                style="background-color: #eeeeee;" />
                                     </div>

@@ -85,9 +85,10 @@ public final class ModelService
     {
         Model model = new Model( );
         model.setName( strPluginName );
-
+        
         PluginModel pm = new PluginModel( );
         pm.setPluginName( strPluginName );
+        
         model = ModelHome.create( model );
         pm.setIdPlugin( model.getIdPlugin( ) );
         savePluginModel( pm );

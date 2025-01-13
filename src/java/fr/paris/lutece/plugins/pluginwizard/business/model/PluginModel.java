@@ -82,6 +82,7 @@ public class PluginModel
     private List<BusinessClass> _listBusinessClasses;
     private Rest _rest;
     private boolean _bIsModule;
+    private boolean _bIsWorkflowTask;
 
     /**
      *
@@ -629,7 +630,7 @@ public class PluginModel
     }
 
     /**
-     * Returns the Type (module or plugin)
+     * Returns the Type (module, plugin or workflowtask)
      * 
      * @return The Type
      */
@@ -679,6 +680,38 @@ public class PluginModel
     public void setModule( boolean bIsModule )
     {
         this._bIsModule = bIsModule;
+    }
+    
+    /**
+     * Returns the isWorkflowTask boolean value
+     * 
+     * @return The isWorkflowTask
+     */
+    public boolean isWorkflowTask( )
+    {
+        return ( _bIsWorkflowTask || "WORKFLOWTASK".equals( _strType ) );
+    }
+
+    /**
+     * Returns the isWorkflowTask boolean value
+     * 
+     * @return The isWorkflowTask
+     */
+    @JsonIgnore
+    public boolean getWorkflowTask( )
+    {
+        return _bIsModule;
+    }
+
+    /**
+     * Sets the isWorkflowTask flag
+     * 
+     * @param _bIsWorkflowTask
+     *            The isWorkflowTask boolean value
+     */
+    public void setWorkflowTask( boolean bIsWorkflowTask )
+    {
+        this._bIsWorkflowTask = bIsWorkflowTask;
     }
 
 }

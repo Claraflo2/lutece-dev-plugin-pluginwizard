@@ -33,7 +33,7 @@
 	"portletJspName":/^Portlet[A-Z][a-zA-Z]*$/,
 	"portletJspNameSize":/^.{1,100}$/,
  };
-
+ 
 function isEmpty(value) 
 {
 	return value.trim() === '';
@@ -229,7 +229,7 @@ function switchTypeProject(strPluginFormId)
 {
 	   
 	//Get the project type selected
-	const radios = document.querySelectorAll('input[name="project_type_selector"]');
+	const radios = document.querySelectorAll('input[name="type"]');
 	const selectedRadio = Array.from(radios).find(radio => radio.checked); // Find selected radio
 	const projectType = selectedRadio ? selectedRadio.value.toLowerCase() : '';
 	
