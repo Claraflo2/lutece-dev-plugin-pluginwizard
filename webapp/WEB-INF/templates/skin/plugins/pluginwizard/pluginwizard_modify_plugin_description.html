@@ -50,10 +50,11 @@
 									<div class="col-md-10">
 										<input class="form-control" type="text" name="type"
                                                value=<#if (plugin_model.type?? && plugin_model.type == 'MODULE')> 
-                                               			#i18n{pluginwizard.pluginwizard_modify_plugin_description.labelModule}
+                                               			"#i18n{pluginwizard.pluginwizard_modify_plugin_description.labelModule}"
                                                		<#elseif (plugin_model.type?? && plugin_model.type == 'WORKFLOWTASK')>
-                                               		    #i18n{pluginwizard.pluginwizard_modify_plugin_description.labelWorkflowTask}
-                                                    <#else> #i18n{pluginwizard.pluginwizard_modify_plugin_description.labelPlugin} 
+                                               		    "#i18n{pluginwizard.pluginwizard_modify_plugin_description.labelWorkflowTask}"
+                                                    <#else> 
+                                                    	"#i18n{pluginwizard.pluginwizard_modify_plugin_description.labelPlugin}"
                                                     </#if> readonly
                                                style="background-color: #eeeeee;" />
 									</div>

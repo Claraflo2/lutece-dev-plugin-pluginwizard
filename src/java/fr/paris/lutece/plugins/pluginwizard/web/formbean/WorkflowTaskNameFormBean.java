@@ -48,7 +48,7 @@ public class WorkflowTaskNameFormBean implements Serializable,FormBean
     @Pattern( regexp = "([a-z-]*)", message = "pluginwizard.error.workflowtask.name.forbidden.caracters" )
     @Pattern( regexp = "(^[^-].*[^-]$)", message = "pluginwizard.error.workflowtask.name.forbidden.pattern" )
     private String _strName;
-    @Pattern( regexp = "(^plugin$|^module$|^workflowtask$)", message = "pluginwizard.error.project.type" )
+    @Pattern( regexp = "^(MODULE|PLUGIN|WORKFLOWTASK)$", message = "pluginwizard.error.project.type" )
     private String _strType;
     
     /**

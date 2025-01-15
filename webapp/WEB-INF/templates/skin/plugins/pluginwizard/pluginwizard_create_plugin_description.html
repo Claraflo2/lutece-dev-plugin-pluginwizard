@@ -48,10 +48,13 @@
                                     <div class="col-md-10">
                                         <input class="form-control" type="text" name="type"
                                                value=<#if (project_type?? && project_type == 'MODULE')> 
-                                         				#i18n{pluginwizard.pluginwizard_create_plugin_description.labelModule}
+                                         				"#i18n{pluginwizard.pluginwizard_create_plugin_description.labelModule}"
                                          			<#elseif (project_type?? && project_type == 'WORKFLOWTASK')>
-                                         			    #i18n{pluginwizard.pluginwizard_create_plugin_description.labelWorkflowTask}		
-                                                    <#else> #i18n{pluginwizard.pluginwizard_create_plugin_description.labelPlugin} </#if> readonly
+                                         			    "#i18n{pluginwizard.pluginwizard_create_plugin_description.labelWorkflowTask}"		
+                                                    <#else> 
+                                                    	"#i18n{pluginwizard.pluginwizard_create_plugin_description.labelPlugin}" 
+                                                    </#if> 
+                                               readonly
                                                style="background-color: #eeeeee;" />
                                     </div>
 								</div>

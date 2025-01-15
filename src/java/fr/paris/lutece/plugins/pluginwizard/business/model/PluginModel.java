@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.pluginwizard.business.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.URL;
 
 import java.util.ArrayList;
@@ -82,7 +83,6 @@ public class PluginModel
     private List<BusinessClass> _listBusinessClasses;
     private Rest _rest;
     private boolean _bIsModule;
-    private boolean _bIsWorkflowTask;
 
     /**
      *
@@ -683,35 +683,13 @@ public class PluginModel
     }
     
     /**
-     * Returns the isWorkflowTask boolean value
+     * Returns true if this instance is a workflow task
      * 
-     * @return The isWorkflowTask
+     * @return True if _strType is equal to "WORKFLOWTASK"
      */
     public boolean isWorkflowTask( )
     {
-        return ( _bIsWorkflowTask || "WORKFLOWTASK".equals( _strType ) );
-    }
-
-    /**
-     * Returns the isWorkflowTask boolean value
-     * 
-     * @return The isWorkflowTask
-     */
-    @JsonIgnore
-    public boolean getWorkflowTask( )
-    {
-        return _bIsModule;
-    }
-
-    /**
-     * Sets the isWorkflowTask flag
-     * 
-     * @param _bIsWorkflowTask
-     *            The isWorkflowTask boolean value
-     */
-    public void setWorkflowTask( boolean bIsWorkflowTask )
-    {
-        this._bIsWorkflowTask = bIsWorkflowTask;
+        return ( StringUtils.equals( "WORKFLOWTASK", _strType ) );
     }
 
 }

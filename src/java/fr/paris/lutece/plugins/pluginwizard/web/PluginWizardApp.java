@@ -388,15 +388,15 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 		
     	String projectType = request.getParameter( PARAM_PROJECT_TYPE );
     	
-    	if( StringUtils.equals(projectType, PROJECT_TYPE_PLUGIN ))
+    	if(StringUtils.equalsIgnoreCase(projectType, PROJECT_TYPE_PLUGIN ))
     	{
     		return new PluginNameFormBean();
     	}
-    	else if(StringUtils.equals(projectType, PROJECT_TYPE_MODULE) ) 
+    	else if(StringUtils.equalsIgnoreCase(projectType, PROJECT_TYPE_MODULE) ) 
     	{
     		return new ModuleNameFormBean();
     	}
-    	else if(StringUtils.equals(projectType, PROJECT_TYPE_WORKFLOW_TASK) ) 
+    	else if(StringUtils.equalsIgnoreCase(projectType, PROJECT_TYPE_WORKFLOW_TASK) ) 
     	{
     		return new WorkflowTaskNameFormBean();
     	}
@@ -433,7 +433,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         _nPluginId = ModelService.savePluginModelFromJson( pluginModel );
         _description = ModelService.getDescription( _nPluginId );
         _strPluginName = ( "MODULE".equals( pluginModel.getType( ) ) ? pluginModel.getModuleName( ) : pluginModel.getPluginName( ) );
-
+        _strProjectType = _description.getType( );
+        
         return redirectView( request, VIEW_MODIFY_DESCRIPTION );
     }
 
@@ -487,7 +488,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         Map<String, Object> model = getPluginModel( );
         _description = ( _description != null ) ? _description : ModelService.getDescription( _nPluginId );
         model.put( MARK_PLUGIN_MODEL, _description );
-
+        
         return getXPage( TEMPLATE_MODIFY_PLUGIN_DESCRIPTION, getLocale( request ), model );
     }
 
@@ -529,28 +530,13 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     private XPage doModifyPlugin( HttpServletRequest request, String strView )
     {
         populate( _description, request );
-
-        if ( _description.getPluginName( ).contains( "-" ) )
-        {
-            if ( !_description.getPluginName( ).matches( "^[a-z]+-[a-z]+$" ) )
-            {
-                addError( ERROR_MODULE_NAME, getLocale( request ) );
-                return redirectView( request, VIEW_MODIFY_DESCRIPTION );
-            }
-            _description.setModule( true );
-        }
-        else
-        {
-            if ( !_description.getPluginName( ).matches( "[a-z]*" ) )
-            {
-                addError( ERROR_PLUGIN_NAME, getLocale( request ) );
-                return redirectView( request, VIEW_MODIFY_DESCRIPTION );
-            }
-            _description.setModule( false );
-        }
-
+        
+        //Set project type with project type entry on the previous page.
+        _description.setType( _strProjectType );
+        _description.setModule( StringUtils.equalsIgnoreCase( _strProjectType, PROJECT_TYPE_MODULE ) );
+        
         if ( !validateBean( _description, getLocale( request ) ) )
-        {
+        {	
             return redirectView( request, VIEW_MODIFY_DESCRIPTION );
         }
 

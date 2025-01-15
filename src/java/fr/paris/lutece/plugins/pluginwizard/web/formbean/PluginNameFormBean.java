@@ -46,7 +46,7 @@ public class PluginNameFormBean implements Serializable,FormBean
     @NotEmpty( message = "pluginwizard.error.plugin.name.notEmpty" )
     @Pattern( regexp = "([a-z]*)", message = "pluginwizard.error.plugin.name.pattern" )
     private String _strName;
-    @Pattern( regexp = "(^plugin$|^module$|^workflowtask$)", message = "pluginwizard.error.project.type" )
+    @Pattern( regexp = "^(MODULE|PLUGIN|WORKFLOWTASK)$", message = "pluginwizard.error.project.type" )
     private String _strType;
     
     /**
