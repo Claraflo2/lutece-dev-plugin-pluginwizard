@@ -50,6 +50,7 @@ import fr.paris.lutece.plugins.pluginwizard.service.ModelService;
 import fr.paris.lutece.plugins.pluginwizard.service.QualityService;
 import fr.paris.lutece.plugins.pluginwizard.service.generator.GeneratorService;
 import fr.paris.lutece.plugins.pluginwizard.web.formbean.BusinessClassFormBean;
+import fr.paris.lutece.plugins.pluginwizard.web.formbean.ConfigurationFormBean;
 import fr.paris.lutece.plugins.pluginwizard.web.formbean.DescriptionFormBean;
 import fr.paris.lutece.plugins.pluginwizard.web.formbean.FormBean;
 import fr.paris.lutece.plugins.pluginwizard.web.formbean.ModuleNameFormBean;
@@ -118,6 +119,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     private static final String TEMPLATE_CREATE_PLUGIN = "/skin/plugins/pluginwizard/pluginwizard_create_plugin.html";
     private static final String TEMPLATE_CREATE_PLUGIN_DESCRIPTION = "/skin/plugins/pluginwizard/pluginwizard_create_plugin_description.html";
     private static final String TEMPLATE_MODIFY_PLUGIN_DESCRIPTION = "/skin/plugins/pluginwizard/pluginwizard_modify_plugin_description.html";
+    private static final String TEMPLATE_CREATE_WORKFLOW_CONFIGURATION = "/skin/plugins/pluginwizard/pluginwizard_create_workflow_configuration.html";
+    private static final String TEMPLATE_MODIFY_WORKFLOW_CONFIGURATION = "/skin/plugins/pluginwizard/pluginwizard_modify_workflow_configuration.html";
     private static final String TEMPLATE_MODIFY_PLUGIN = "/skin/plugins/pluginwizard/pluginwizard_modify_plugin.html";
     private static final String TEMPLATE_MODIFY_BUSINESS_CLASS = "/skin/plugins/pluginwizard/pluginwizard_modify_business_class.html";
     private static final String TEMPLATE_MANAGE_ADMIN_FEATURES = "/skin/plugins/pluginwizard/pluginwizard_manage_admin_features.html";
@@ -169,7 +172,13 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     private static final String ACTION_DESCRIPTION_NEXT = "descriptionNext";
     private static final String ACTION_RESET_DATA = "resetData";
     private static final String PROPERTY_SEARCH_DUPLICATES = "pluginwizard.searchDuplicates";
-
+   
+    //CONFIGURATION
+    private static final String VIEW_CREATE_WORKFLOW_CONFIGURATION = "createWorkflowConfiguration";
+    private static final String VIEW_MODIFY_WORKFLOW_CONFIGURATION = "modifyWorkflowConfiguration";
+    private static final String ACTION_WORKFLOW_CONFIGURATION_NEXT = "configurationNext";
+    private static final String MARK_WORKFLOW_CONFIGURATION = "configuration";
+    
     // REST
     private static final String VIEW_MANAGE_REST = "manageRest";
     private static final String ACTION_MODIFY_REST_BACK = "modifyRestBack";
@@ -278,6 +287,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     private String _strPluginName;
     private String _strProjectType;
     private DescriptionFormBean _description;
+    private ConfigurationFormBean _configuration;
     private Feature _feature;
     private BusinessClassFormBean _businessClass;
     private Attribute _attribute;
@@ -449,7 +459,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 
     // //////////////////////////////////////////////////////////////////////////
     // DESCRIPTION
-
+    
+    
     /**
      * Gets the create plugin description page
      *
@@ -488,6 +499,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         Map<String, Object> model = getPluginModel( );
         _description = ( _description != null ) ? _description : ModelService.getDescription( _nPluginId );
         model.put( MARK_PLUGIN_MODEL, _description );
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
         
         return getXPage( TEMPLATE_MODIFY_PLUGIN_DESCRIPTION, getLocale( request ), model );
     }
@@ -502,7 +514,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     @Action( ACTION_DESCRIPTION_PREVIOUS )
     public XPage doDescritionPrevious( HttpServletRequest request )
     {
-        return doModifyPlugin( request, VIEW_CREATE_PLUGIN );
+        return redirectView( request, VIEW_CREATE_PLUGIN );
     }
 
     /**
@@ -514,7 +526,11 @@ public class PluginWizardApp extends MVCApplication implements Serializable
      */
     @Action( ACTION_DESCRIPTION_NEXT )
     public XPage doDescritionNext( HttpServletRequest request )
-    {
+    {	
+    	if( StringUtils.equalsIgnoreCase( _strProjectType, PROJECT_TYPE_WORKFLOW_TASK ) ) {
+    		return doModifyPlugin( request, VIEW_CREATE_WORKFLOW_CONFIGURATION );
+    	}
+    		
         return doModifyPlugin( request, VIEW_MANAGE_BUSINESS_CLASSES );
     }
 
@@ -546,6 +562,72 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         ModelService.updateDescription( _nPluginId, _description );
 
         return redirectView( request, strView );
+    }
+    
+    
+    // //////////////////////////////////////////////////////////////////////////
+    // CONFIGURATION
+    
+    /**
+     * The create form of the workflow configuration
+     *
+     * @param request
+     *            The Http Request
+     * @return The html code of the creation of workflow configuration
+     */
+    @View( VIEW_CREATE_WORKFLOW_CONFIGURATION )
+    public XPage getCreateWorkflowConfiguration( HttpServletRequest request )
+    {	
+    	_configuration = new ConfigurationFormBean( );
+    	
+        Map<String, Object> model = getModel( );
+        model.put( MARK_PLUGIN_ID, _nPluginId );
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
+        return getXPage( TEMPLATE_CREATE_WORKFLOW_CONFIGURATION, getLocale( request ), model );
+    }
+    
+    /**
+     * The modification form of the workflow configuration
+     *
+     * @param request
+     *            The Http Request
+     * @return The html code of the creation of workflow configuration
+     */
+    @View( VIEW_MODIFY_WORKFLOW_CONFIGURATION )
+    public XPage getModifyWorkflowConfiguration( HttpServletRequest request )
+    {
+        Map<String, Object> model = getModel( );
+        model.put( MARK_PLUGIN_ID, _nPluginId );
+        model.put( MARK_WORKFLOW_CONFIGURATION, _configuration );
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
+        return getXPage( TEMPLATE_MODIFY_WORKFLOW_CONFIGURATION, getLocale( request ), model );
+    }
+    
+    /**
+     * The creation of an 
+     *
+     * @param request
+     *            The Http Request
+     * @return The XPage
+     */
+    @Action( ACTION_WORKFLOW_CONFIGURATION_NEXT )
+    public XPage doCreateWorkflowConfiguration( HttpServletRequest request )
+    {
+        populate( _configuration, request );
+
+        if ( !validateBean( _configuration, getLocale( request ) ) )
+        {	
+        	
+            return redirectView( request, VIEW_MODIFY_WORKFLOW_CONFIGURATION );
+        }
+
+        ModelService.updateConfiguration( _nPluginId, _configuration );
+        
+        return redirectView( request, VIEW_MANAGE_BUSINESS_CLASSES );
+        
+        
     }
 
     // //////////////////////////////////////////////////////////////////////////

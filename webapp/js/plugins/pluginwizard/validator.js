@@ -6,11 +6,12 @@
 	"moduleName": /^[a-z-]+$/,
 	"conventionModuleName": /^[a-z]+-[a-z]+$/,
 	"workflowTaskName": /^[a-z-]+$/,
-	"conventionWorkflowTaskName": /^[a-z]+-[a-z]+$/,
+	"conventionWorkflowTaskName": /^[a-z]*-{0,1}[a-z]+$/,
 	"pluginDescription": /^.{5,255}$/,
 	"pluginProvider": /^.{3,255}$/,
 	"pluginVersion": /^\d\.\d\.\d$/,
 	"pluginCopyright": /^.{1,255}$/,
+	"workflowTaskScope": /^[a-z]+$/,
 	"businessClassName": /^[A-Z][a-zA-Z]+$/,
 	"businessClassNameSize":/^.{1,51}$/,
 	"businessTableName": /^(?!_+$)[a-z_]+$/,
@@ -338,4 +339,31 @@ function autoFillAdminFeatureForm(strAdminFeatureFormId)
 	
 	//Update help message spans associated with all form inputs
 	updateFormFront(strAdminFeatureFormId);
+}
+
+/* Switch message when select value change  */
+function switchDivInfoVisibility(event)
+{
+	const selectId = event.target.id;
+	const HelpMessageDivId = selectId+"-help-message-div";
+
+	const helpMessageDiv = document.getElementById(HelpMessageDivId);
+	
+	
+	if(helpMessageDiv){
+		
+		const helperSpans = helpMessageDiv.querySelectorAll('span');
+			
+		helperSpans.forEach(span => {
+			
+			if (span.classList.contains('d-none')) {
+				span.classList.remove('d-none');
+				span.classList.add('d-block');
+			}
+			else {
+				span.classList.remove('d-block');
+				span.classList.add('d-none');
+			}
+		});
+	}
 }

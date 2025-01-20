@@ -148,13 +148,18 @@
                                             <option value="1">#i18n{pluginwizard.pluginwizard_create_plugin_description.labelTrue}</option>
                                             <option value="0">#i18n{pluginwizard.pluginwizard_create_plugin_description.labelFalse}</option>
                                         </select>
+                                           <div id="pluginDbPoolRequired-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">
+											<span id="pluginDbPoolRequired-help-message-span" class="d-block">
+												<i class="ti ti-info-circle mx-1"></i>#i18n{pluginwizard.pluginwizard_create_plugin_description.helpRulesPluginDbPoolRequired}
+											</span>
+										</div>
                                     </div>
                                 </div>
                                 
                                 <!-- Submit Buttons -->
                                 <div class="row mb-3">
                                     <div class="col-md-9 offset-md-3">
-                                        <button type="submit" name="view_createPlugin" class="btn btn-primary me-2">
+                                        <button type="submit" name="action_PreviousNext" class="btn btn-primary me-2">
                                             <i class="ti ti-chevron-left"></i>
                                             #i18n{pluginwizard.pluginwizard_create_plugin_description.buttonBack}
                                         </button>
@@ -174,8 +179,11 @@
     </div>
 </div>
 
+<div id="result" ></div>
+
 <script src='js/plugins/pluginwizard/validator.js'></script>
 <script>
 	updateFormFront('create-description-form');
 	document.getElementById('create-description-form').addEventListener('input', function(event){validationForm(event);});
 </script>
+ 

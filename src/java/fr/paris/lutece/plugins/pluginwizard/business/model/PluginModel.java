@@ -82,6 +82,7 @@ public class PluginModel
     private List<Portlet> _listPluginPortlets;
     private List<BusinessClass> _listBusinessClasses;
     private Rest _rest;
+    private Configuration _configuration;
     private boolean _bIsModule;
 
     /**

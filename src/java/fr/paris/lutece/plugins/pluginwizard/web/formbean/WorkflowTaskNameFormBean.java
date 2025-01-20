@@ -44,7 +44,7 @@ import javax.validation.constraints.Pattern;
 public class WorkflowTaskNameFormBean implements Serializable,FormBean
 {
     @NotEmpty( message = "pluginwizard.error.workflowtask.name.notEmpty" )
-    @Pattern( regexp = "(^[a-z]+-[a-z]+$)", message = "pluginwizard.error.workflowtask.name.pattern" )
+    @Pattern( regexp = "(^[a-z]*-{0,1}[a-z]+$)", message = "pluginwizard.error.workflowtask.name.pattern" )
     @Pattern( regexp = "([a-z-]*)", message = "pluginwizard.error.workflowtask.name.forbidden.caracters" )
     @Pattern( regexp = "(^[^-].*[^-]$)", message = "pluginwizard.error.workflowtask.name.forbidden.pattern" )
     private String _strName;

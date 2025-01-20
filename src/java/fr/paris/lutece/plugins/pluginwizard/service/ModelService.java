@@ -43,6 +43,7 @@ import fr.paris.lutece.plugins.pluginwizard.business.model.PluginModel;
 import fr.paris.lutece.plugins.pluginwizard.business.model.Portlet;
 import fr.paris.lutece.plugins.pluginwizard.business.model.Rest;
 import fr.paris.lutece.plugins.pluginwizard.web.formbean.BusinessClassFormBean;
+import fr.paris.lutece.plugins.pluginwizard.web.formbean.ConfigurationFormBean;
 import fr.paris.lutece.plugins.pluginwizard.web.formbean.DescriptionFormBean;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppException;
@@ -1241,7 +1242,7 @@ public final class ModelService
 
         savePluginModel( pm );
     }
-
+    
     public static DescriptionFormBean getDescription( int nPluginId )
     {
         PluginModel pm = getPluginModel( nPluginId );
@@ -1269,5 +1270,21 @@ public final class ModelService
         {
             throw new AppException( "JSON exception", e );
         }
+    }
+    
+    public static void updateConfiguration( int nPluginId, ConfigurationFormBean configuration )
+    {
+        PluginModel pm = getPluginModel( nPluginId );
+        /*
+        try
+        {
+            BeanUtils.copyProperties( pm, configuration );
+        }
+        catch( IllegalAccessException | InvocationTargetException e )
+        {
+            throw new AppException( "Bean exception", e );
+        }
+
+        savePluginModel( pm );*/
     }
 }
