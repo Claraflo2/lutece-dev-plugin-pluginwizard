@@ -202,6 +202,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     private static final String ACTION_MODIFY_BUSINESS_CLASS = "modifyBusinessClass";
     private static final String ACTION_CONFIRM_REMOVE_BUSINESS_CLASS = "confirmRemoveBusinessClass";
     private static final String ACTION_REMOVE_BUSINESS_CLASS = "removeBusinessClass";
+    private static final String ACTION_PREVIOUS_BUSINESS_CLASS = "previousBusinessClass";
     private static final String PROPERTY_CONFIRM_REMOVE_BUSINESS_CLASS_MESSAGE = "pluginwizard.siteMessage.confirmRemoveBusinessClass.title";
 
     // ATTRIBUTE
@@ -580,7 +581,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     {	
     	_configuration = new ConfigurationFormBean( );
     	
-        Map<String, Object> model = getModel( );
+    	Map<String, Object> model = getPluginModel( );
+    	
         model.put( MARK_PLUGIN_ID, _nPluginId );
         model.put( MARK_PROJECT_TYPE, _strProjectType );
         
@@ -598,8 +600,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     public XPage getModifyWorkflowConfiguration( HttpServletRequest request )
     {
         Map<String, Object> model = getModel( );
+        
         model.put( MARK_PLUGIN_ID, _nPluginId );
-        model.put( MARK_WORKFLOW_CONFIGURATION, _configuration );
         model.put( MARK_PROJECT_TYPE, _strProjectType );
         
         return getXPage( TEMPLATE_MODIFY_WORKFLOW_CONFIGURATION, getLocale( request ), model );
@@ -618,8 +620,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         populate( _configuration, request );
 
         if ( !validateBean( _configuration, getLocale( request ) ) )
-        {	
-        	
+        {	     	
             return redirectView( request, VIEW_MODIFY_WORKFLOW_CONFIGURATION );
         }
 
@@ -629,6 +630,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         
         
     }
+    
 
     // //////////////////////////////////////////////////////////////////////////
     // ADMIN FEATURES
@@ -989,6 +991,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 
         return redirectView( request, VIEW_MANAGE_BUSINESS_CLASSES );
     }
+    
 
     /**
      * Validate table prefix
@@ -1076,6 +1079,17 @@ public class PluginWizardApp extends MVCApplication implements Serializable
             addError( ERROR_BUSINESS_CLASS_TABLE_NAME_DUPLICATE, getLocale(request) );
         }
 				
+	}
+	
+	
+	@Action( ACTION_PREVIOUS_BUSINESS_CLASS )
+	public XPage doPreviousBusinessClass( HttpServletRequest request ) {
+		
+		if (StringUtils.equalsIgnoreCase(_strProjectType,PROJECT_TYPE_WORKFLOW_TASK)) {
+			return redirectView(request, VIEW_MODIFY_WORKFLOW_CONFIGURATION);
+		}
+		
+		return redirectView(request, VIEW_MODIFY_DESCRIPTION);
 	}
 	
     // //////////////////////////////////////////////////////////////////////////

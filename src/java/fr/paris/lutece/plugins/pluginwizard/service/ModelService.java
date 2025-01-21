@@ -38,6 +38,7 @@ import fr.paris.lutece.plugins.pluginwizard.business.ModelHome;
 import fr.paris.lutece.plugins.pluginwizard.business.model.Application;
 import fr.paris.lutece.plugins.pluginwizard.business.model.Attribute;
 import fr.paris.lutece.plugins.pluginwizard.business.model.BusinessClass;
+import fr.paris.lutece.plugins.pluginwizard.business.model.Configuration;
 import fr.paris.lutece.plugins.pluginwizard.business.model.Feature;
 import fr.paris.lutece.plugins.pluginwizard.business.model.PluginModel;
 import fr.paris.lutece.plugins.pluginwizard.business.model.Portlet;
@@ -1272,19 +1273,29 @@ public final class ModelService
         }
     }
     
+    
+    
+    /**
+     * Set the configuration in plugin model
+     * 
+     * @param nPLuginId
+     *            PLugin ID
+     * @param configurationFormBean 
+     */
     public static void updateConfiguration( int nPluginId, ConfigurationFormBean configuration )
     {
         PluginModel pm = getPluginModel( nPluginId );
-        /*
+        		
         try
         {
-            BeanUtils.copyProperties( pm, configuration );
+            BeanUtils.copyProperties( pm.getConfiguration(), configuration );
         }
         catch( IllegalAccessException | InvocationTargetException e )
         {
             throw new AppException( "Bean exception", e );
         }
 
-        savePluginModel( pm );*/
+        savePluginModel( pm );
     }
+    
 }

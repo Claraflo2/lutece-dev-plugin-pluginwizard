@@ -95,6 +95,7 @@ public class PluginModel
         _listPluginPortlets = new ArrayList<>( );
         _listBusinessClasses = new ArrayList<>( );
         _rest = new Rest( );
+        _configuration = new Configuration( );
     }
 
     /**
@@ -553,6 +554,28 @@ public class PluginModel
     {
         return _rest;
     }
+    
+    /**
+     * Returns the configuration
+     * 
+     * @return The configuration
+     */
+    public Configuration getConfiguration( )
+    {
+        return _configuration;
+    }
+    
+    /**
+     * Sets the configuration
+     * 
+     * @param configuration
+     *            The configuration
+     */
+	public void setConfiguration(Configuration configuration) 
+	{	
+		_configuration = configuration;
+	}
+
 
     /**
      * Sets the list of plugin features

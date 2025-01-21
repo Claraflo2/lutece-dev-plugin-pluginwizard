@@ -36,15 +36,15 @@
                                     	#i18n{pluginwizard.pluginwizard_modify_workflow_configuration.labelWorkflowFormConfigRequired} * :
                                     </label>
                                     <div class="col-md-10">
-                                        <select id="workflowFormConfigRequired" name="workflow_form_config_required" class="form-select" aria-describedby="workformConfigRequired-help-message-div">
-                                            <option value="1">#i18n{pluginwizard.pluginwizard_modify_workflow_configuration.labelTrue}</option>
-                                            <option value="0">#i18n{pluginwizard.pluginwizard_modify_workflow_configuration.labelFalse}</option>
+                                        <select id="workflowFormConfigRequired" name="workflow_form_config_required" class="form-select" aria-describedby="workflowFormConfigRequired-help-message-div">
+                                            <option value="0" <#if  plugin_model.configuration.workflowFormConfigRequired=="0">selected</#if>>#i18n{pluginwizard.pluginwizard_modify_workflow_configuration.labelFalse}</option>
+                                            <option value="1" <#if  plugin_model.configuration.workflowFormConfigRequired=="1">selected</#if>>#i18n{pluginwizard.pluginwizard_modify_workflow_configuration.labelTrue}</option>
                                         </select>
                                         <div id="workflowFormConfigRequired-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">
-											<span id="workflowFormConfigRequiredTrue-help-message-span" class="d-block">
+											<span id="workflowFormConfigRequiredTrue-help-message-span" class="d-none">
 												<i class="ti ti-info-circle mx-1"></i>#i18n{pluginwizard.pluginwizard_modify_workflow_configuration.helpRulesWorkflowFormConfigRequiredTrue}
 											</span>
-											<span id="workflowFormConfigRequiredFalse-help-message-span" class="d-none">
+											<span id="workflowFormConfigRequiredFalse-help-message-span" class="d-block">
 												<i class="ti ti-info-circle mx-1"></i>#i18n{pluginwizard.pluginwizard_modify_workflow_configuration.helpRulesWorkflowFormConfigRequiredFalse}
 											</span>
 										</div>
@@ -58,14 +58,14 @@
                                     </label>
                                     <div class="col-md-10">
                                         <select id="workflowFormTaskRequired" name="workflow_form_task_required" class="form-select" aria-describedby="workflowFormTaskRequired-help-message-div">
-                                            <option value="1">#i18n{pluginwizard.pluginwizard_modify_workflow_configuration.labelTrue}</option>
-                                            <option value="0">#i18n{pluginwizard.pluginwizard_modify_workflow_configuration.labelFalse}</option>
+                                            <option value="0" <#if  plugin_model.configuration.workflowFormTaskRequired == "0">selected</#if>>#i18n{pluginwizard.pluginwizard_modify_workflow_configuration.labelFalse}</option>
+                                            <option value="1" <#if  plugin_model.configuration.workflowFormTaskRequired == "1">selected</#if>>#i18n{pluginwizard.pluginwizard_modify_workflow_configuration.labelTrue}</option>
                                         </select>
                                         <div id="workflowFormTaskRequired-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">
-											<span id="workflowFormTaskRequiredTrue-help-message-span" class="d-block">
+											<span id="workflowFormTaskRequiredTrue-help-message-span" class="d-none">
 												<i class="ti ti-info-circle mx-1"></i>#i18n{pluginwizard.pluginwizard_modify_workflow_configuration.helpRulesWorkflowFormTaskRequiredTrue}
 											</span>
-											<span id="workflowFormTaskRequiredFalse-help-message-span" class="d-none">
+											<span id="workflowFormTaskRequiredFalse-help-message-span" class="d-block">
 												<i class="ti ti-info-circle mx-1"></i>#i18n{pluginwizard.pluginwizard_modify_workflow_configuration.helpRulesWorkflowFormTaskRequiredFalse}
 											</span>
 										</div>
@@ -79,8 +79,8 @@
                                     </label>
                                     <div class="col-md-10">
                                         <select id="workflowTaskForAutomaticAction" name="workflow_task_for_automatic_action" class="form-select" aria-describedby="workflowTaskForAutomaticAction-help-message-div">
-                                            <option value="1">#i18n{pluginwizard.pluginwizard_modify_workflow_configuration.labelTrue}</option>
-                                            <option value="0">#i18n{pluginwizard.pluginwizard_modify_workflow_configuration.labelFalse}</option>
+                                            <option value="0" <#if  plugin_model.configuration.workflowTaskForAutomaticAction == "0">selected</#if>>#i18n{pluginwizard.pluginwizard_modify_workflow_configuration.labelFalse}</option>
+                                            <option value="1" <#if  plugin_model.configuration.workflowTaskForAutomaticAction == "1">selected</#if>>#i18n{pluginwizard.pluginwizard_modify_workflow_configuration.labelTrue}</option>
                                         </select>
                                         <div id="workflowTaskForAutomaticAction-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">
 											<span id="workflowTaskForAutomaticActionTrue-help-message-span" class="d-block">
@@ -141,12 +141,12 @@
 
 <script>
 	updateFormFront('modify-configuration-form');
-	document.getElementById('modify-description-form').addEventListener('input', function(event){validationForm(event);});
+	updateDivInfoVisibility('modify-configuration-form');
+	document.getElementById('modify-configuration-form').addEventListener('input', function(event){validationForm(event);});
 	
-	document.getElementById('workformConfigRequired').addEventListener('change', function(event){
-		switchDivInfoVisibility(event);});
-	document.getElementById('workflowFormTaskRequired').addEventListener('change', function(event){switchDivInfoVisibility(event);});
-	document.getElementById('workflowTaskForAutomaticAction').addEventListener('change', function(event){switchDivInfoVisibility(event);});
+	document.getElementById('workformConfigRequired').addEventListener('change', function(event){switchDivInfoVisibility(event.target.id);});
+	document.getElementById('workflowFormTaskRequired').addEventListener('change', function(event){switchDivInfoVisibility(event.target.id);});
+	document.getElementById('workflowTaskForAutomaticAction').addEventListener('change', function(event){switchDivInfoVisibility(event.target.id);});
 </script>
  
  

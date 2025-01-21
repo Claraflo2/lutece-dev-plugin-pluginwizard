@@ -341,10 +341,27 @@ function autoFillAdminFeatureForm(strAdminFeatureFormId)
 	updateFormFront(strAdminFeatureFormId);
 }
 
-/* Switch message when select value change  */
-function switchDivInfoVisibility(event)
+function updateDivInfoVisibility(strFormId)
 {
-	const selectId = event.target.id;
+	// Sélectionner all text type inputs in form
+	const form = document.getElementById(strFormId);
+	
+	if(form){
+		const selects = form.querySelectorAll('select');
+	
+		selects.forEach(select => {
+		    switchDivInfoVisibility(select.id);
+		});
+	}	
+}
+
+
+/* Switch message when select value change  */
+function switchDivInfoVisibility(selectId)
+{	
+	
+	const selectForm = document.getElementById(selectId);
+	const selectValue = selectForm.value==0?"False":"True";
 	const HelpMessageDivId = selectId+"-help-message-div";
 
 	const helpMessageDiv = document.getElementById(HelpMessageDivId);
@@ -356,7 +373,7 @@ function switchDivInfoVisibility(event)
 			
 		helperSpans.forEach(span => {
 			
-			if (span.classList.contains('d-none')) {
+			if (span.id.includes(selectValue)) {
 				span.classList.remove('d-none');
 				span.classList.add('d-block');
 			}

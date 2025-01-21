@@ -87,24 +87,24 @@ public class ConfigurationFormBean implements Serializable
     }
 
     /**
-     * Returns WorkformConfigRequired
+     * Returns WorkflowFormConfigRequired
      * 
-     * @return The WorkformConfigRequired
+     * @return The WorkflowFormConfigRequired
      *      */
-    public String getWorkformConfigRequired( )
+    public String getWorkflowFormConfigRequired( )
     {
         return _strWorkflowFormConfigRequired;
     }
 
     /**
-     * Sets the WorkformConfigRequired
+     * Sets the WorkflowFormConfigRequired
      * 
-     * @param strWorkformConfigRequired
-     *            The WorkformConfigRequired
+     * @param strWorkflowFormConfigRequired
+     *            The WorkflowFormConfigRequired
      */
-    public void setWorkflowFormConfigRequired( String strWorkformConfigRequired )
+    public void setWorkflowFormConfigRequired( String strWorkflowFormConfigRequired )
     {
-    	_strWorkflowFormConfigRequired = strWorkformConfigRequired;
+    	_strWorkflowFormConfigRequired = strWorkflowFormConfigRequired;
     }
 
     /**
