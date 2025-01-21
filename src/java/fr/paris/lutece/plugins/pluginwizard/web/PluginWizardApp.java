@@ -599,7 +599,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     @View( VIEW_MODIFY_WORKFLOW_CONFIGURATION )
     public XPage getModifyWorkflowConfiguration( HttpServletRequest request )
     {
-        Map<String, Object> model = getModel( );
+        Map<String, Object> model = getPluginModel( );
         
         model.put( MARK_PLUGIN_ID, _nPluginId );
         model.put( MARK_PROJECT_TYPE, _strProjectType );

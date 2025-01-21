@@ -100,7 +100,7 @@
                                     </label>
                                     <div class="col-md-10">
                                         <input type="text" id="workflowTaskScope-input" name="workflow_task_scope" class="form-control"
-                                               placeholder="prototype" value="${configuration.workflowTaskScope!'prototype'}" aria-describedby="workflowTaskScope-help-message-div" maxlength=255/>
+                                               placeholder="prototype" value="${plugin_model.configuration.workflowTaskScope!'prototype'}" aria-describedby="workflowTaskScope-help-message-div" maxlength=255/>
                                         <div id="workflowTaskScope-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">
                                             <span id="workflowTaskScopeInfo-help-message-span" class="d-block">
                                                <i class="ti ti-info-circle mx-1"></i> #i18n{pluginwizard.pluginwizard_modify_workflow_configuration.helpRulesWorkflowTaskScope}
@@ -144,7 +144,7 @@
 	updateDivInfoVisibility('modify-configuration-form');
 	document.getElementById('modify-configuration-form').addEventListener('input', function(event){validationForm(event);});
 	
-	document.getElementById('workformConfigRequired').addEventListener('change', function(event){switchDivInfoVisibility(event.target.id);});
+	document.getElementById('workflowFormConfigRequired').addEventListener('change', function(event){switchDivInfoVisibility(event.target.id);});
 	document.getElementById('workflowFormTaskRequired').addEventListener('change', function(event){switchDivInfoVisibility(event.target.id);});
 	document.getElementById('workflowTaskForAutomaticAction').addEventListener('change', function(event){switchDivInfoVisibility(event.target.id);});
 </script>
