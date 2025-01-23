@@ -129,7 +129,9 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     private static final String TEMPLATE_MANAGE_BUSINESS_CLASSES = "/skin/plugins/pluginwizard/pluginwizard_manage_business_classes.html";
     private static final String TEMPLATE_MANAGE_REST = "/skin/plugins/pluginwizard/pluginwizard_manage_rest.html";
     private static final String TEMPLATE_GET_RECAPITULATE = "/skin/plugins/pluginwizard/pluginwizard_plugin_recapitulate.html";
-
+	private static final String TEMPLATE_CREATE_CONFIGURATION_CLASS = "/skin/plugins/pluginwizard/pluginwizard_create_configuration_class.html";
+	private static final String TEMPLATE_MODIFY_CONFIGURATION_CLASS = "/skin/plugins/pluginwizard/pluginwizard_modify_configuration_class.html";
+	
     // CREATE
     private static final String TEMPLATE_CREATE_ADMIN_FEATURE = "/skin/plugins/pluginwizard/pluginwizard_create_admin_feature.html";
     private static final String TEMPLATE_CREATE_PLUGIN_PORTLET = "/skin/plugins/pluginwizard/pluginwizard_create_portlet.html";
@@ -204,7 +206,10 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     private static final String ACTION_REMOVE_BUSINESS_CLASS = "removeBusinessClass";
     private static final String ACTION_PREVIOUS_BUSINESS_CLASS = "previousBusinessClass";
     private static final String PROPERTY_CONFIRM_REMOVE_BUSINESS_CLASS_MESSAGE = "pluginwizard.siteMessage.confirmRemoveBusinessClass.title";
-
+	private static final String VIEW_CREATE_CONFIGURATION_CLASS = "createConfigurationClass";
+	private static final String VIEW_MODIFY_CONFIGURATION_CLASS = "modifyConfigurationClass";
+	private static final String ACTION_CREATE_CONFIGURATION_CLASS = "createConfigurationClass";
+	
     // ATTRIBUTE
     private static final String VIEW_CREATE_ATTRIBUTE = "createAttribute";
     private static final String VIEW_MODIFY_ATTRIBUTE = "modifyAttribute";
@@ -214,7 +219,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     private static final String ACTION_REMOVE_ATTRIBUTE = "removeAttribute";
     private static final String ACTION_VALIDATE_ATTRIBUTES = "validateAttributes";
     private static final String PROPERTY_CONFIRM_REMOVE_ATTRIBUTE_MESSAGE = "pluginwizard.siteMessage.confirmRemoveAttribute.alertMessage";
-
+    
     // APPLICATION
     private static final String VIEW_MANAGE_APPLICATIONS = "manageApplications";
     private static final String VIEW_CREATE_APPLICATION = "createApplication";
@@ -628,7 +633,6 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         
         return redirectView( request, VIEW_MANAGE_BUSINESS_CLASSES );
         
-        
     }
     
 
@@ -650,7 +654,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 
         model.put( MARK_PLUGIN_ID, Integer.toString( _nPluginId ) );
         model.put( MARK_ADMIN_FEATURES, pm.getFeatures( ) );
-
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
         return getXPage( TEMPLATE_MANAGE_ADMIN_FEATURES, getLocale( request ), model );
     }
 
@@ -671,7 +676,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         model.put( MARK_ADMIN_FEATURES, pm.getFeatures( ) );
         model.put( MARK_FEATURE, _feature );
         model.put( MARK_BUSINESS_CLASSES_COMBO, ModelService.getComboBusinessClasses( _nPluginId ) );
-
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
         return getXPage( TEMPLATE_CREATE_ADMIN_FEATURE, getLocale( request ), model );
     }
 
@@ -697,6 +703,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         model.put( MARK_FEATURE, _feature );
         model.put( MARK_ADMIN_FEATURES, pm.getFeatures( ) );
         model.put( MARK_BUSINESS_CLASSES_COMBO, ModelService.getComboBusinessClasses( _nPluginId ) );
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
         
         return getXPage( TEMPLATE_MODIFY_ADMIN_FEATURE, getLocale( request ), model );
     }
@@ -871,7 +878,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         Map<String, Object> model = getModel( );
         model.put( MARK_PLUGIN_ID, Integer.toString( _nPluginId ) );
         model.put( MARK_BUSINESS_CLASSES, ModelService.getPluginModel( _nPluginId ).getBusinessClasses( ) );
-
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
         return getXPage( TEMPLATE_MANAGE_BUSINESS_CLASSES, getLocale( request ), model );
     }
 
@@ -890,6 +898,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         Map<String, Object> model = getPluginModel( );
 
         model.put( MARK_BUSINESS_CLASS, _businessClass );
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
 
         return getXPage( TEMPLATE_CREATE_BUSINESS_CLASS, getLocale( request ), model );
     }
@@ -917,7 +926,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         Map<String, Object> model = getPluginModel( );
         model.put( MARK_BUSINESS_CLASS, _businessClass );
         model.put( MARK_ATTRIBUTES_LIST, ModelService.getBusinessClass( _nPluginId, nBusinessClassId ).getAttributes( ) );
-
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
         return getXPage( TEMPLATE_MODIFY_BUSINESS_CLASS, getLocale( request ), model );
     }
 
@@ -1092,6 +1102,93 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 		return redirectView(request, VIEW_MODIFY_DESCRIPTION);
 	}
 	
+	
+	
+	   // //////////////////////////////////////////////////////////////////////////
+    // CONFIGURATION CLASS
+	
+	/**
+     * The creation form of a configuration class
+     *
+     * @param request
+     *            The Http Request
+     * @return The html code of the creation of a configuration class
+     */
+    @View( VIEW_CREATE_CONFIGURATION_CLASS )
+    public XPage getCreateConfigurationClass( HttpServletRequest request )
+    {
+        _businessClass = ( _businessClass != null ) ? _businessClass : new BusinessClassFormBean( );
+
+        Map<String, Object> model = getPluginModel( );
+
+        model.put( MARK_BUSINESS_CLASS, _businessClass );
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+
+        return getXPage( TEMPLATE_CREATE_CONFIGURATION_CLASS, getLocale( request ), model );
+    }
+
+    /**
+     * Gets the modify configuration class page
+     *
+     * @param request
+     *            The HTTP request
+     * @return The page
+     */
+    @View( VIEW_MODIFY_CONFIGURATION_CLASS )
+    public XPage getModifyConfigurationClass( HttpServletRequest request )
+    {
+        int nBusinessClassId = Integer.parseInt( request.getParameter( PARAM_BUSINESS_CLASS_ID ) );
+        String strRefresh = request.getParameter( PARAM_REFRESH );
+
+        if ( ( _businessClass == null ) || ( _businessClass.getId( ) != nBusinessClassId ) || ( strRefresh != null ) )
+        {
+            _businessClass = ModelService.getFormBusinessClass( _nPluginId, nBusinessClassId );
+        }
+
+        _attribute = null;
+
+        Map<String, Object> model = getPluginModel( );
+        model.put( MARK_BUSINESS_CLASS, _businessClass );
+        model.put( MARK_ATTRIBUTES_LIST, ModelService.getBusinessClass( _nPluginId, nBusinessClassId ).getAttributes( ) );
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
+        return getXPage( TEMPLATE_MODIFY_CONFIGURATION_CLASS, getLocale( request ), model );
+    }
+    
+    /**
+     * The creation action of the configuration class
+     *
+     * @param request
+     *            The Http Request
+     * @return The configuration class id
+     */
+    @Action( ACTION_CREATE_CONFIGURATION_CLASS )
+    public XPage doCreateConfigurationClass( HttpServletRequest request )
+    {
+        populate( _businessClass, request );
+
+        boolean bValidateBean = validateBean( _businessClass, getLocale( request ) );
+        boolean bValidateTablePrefix = validateTablePrefix( request, _businessClass );
+        boolean bValid = bValidateBean && bValidateTablePrefix;
+        
+        if ( !bValid )
+        {	
+            return redirectView( request, VIEW_CREATE_CONFIGURATION_CLASS );
+        }
+        else if ( QualityService.existsDuplicateBusinessClassFields( _businessClass, ModelService.getPluginModel(_nPluginId).getBusinessClasses( ) ) ) 
+        {	
+        	addDupplicateBusinessClassErrorMessages( request );
+            return redirectView( request, VIEW_CREATE_CONFIGURATION_CLASS );
+        }
+
+        BusinessClass businessClass = ModelService.addBusinessClass( _nPluginId, _businessClass );
+        _businessClass = null;
+        addInfo( INFO_BUSINESS_CLASS_CREATED, getLocale( request ) );
+
+        return redirect( request, VIEW_MODIFY_BUSINESS_CLASS, PARAM_BUSINESS_CLASS_ID, businessClass.getId( ) );
+    }
+    
+	
     // //////////////////////////////////////////////////////////////////////////
     // ATTRIBUTE
 
@@ -1116,7 +1213,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         model.put( MARK_BUSINESS_CLASS_ID, strBusinessClassId );
         model.put( MARK_ATTRIBUTE_TYPE_COMBO, ModelService.getAttributeTypes( getLocale( request ) ) );
         model.put( MARK_ATTRIBUTE, _attribute );
-
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
         return getXPage( TEMPLATE_CREATE_ATTRIBUTE, getLocale( request ), model );
     }
 
@@ -1143,7 +1241,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         model.put( MARK_BUSINESS_CLASS_ID, nIdBusinessClass );
         model.put( MARK_ATTRIBUTE_TYPE_COMBO, ModelService.getAttributeTypes( getLocale( request ) ) );
         model.put( MARK_ATTRIBUTE, _attribute );
-
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
         return getXPage( TEMPLATE_MODIFY_ATTRIBUTE, getLocale( request ), model );
     }
 
@@ -1286,7 +1385,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         Map<String, Object> model = getModel( );
         model.put( MARK_PLUGIN_ID, Integer.toString( _nPluginId ) );
         model.put( MARK_PLUGIN_APPLICATIONS, ModelService.getPluginModel( _nPluginId ).getApplications( ) );
-
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
         return getXPage( TEMPLATE_MANAGE_PLUGIN_APPLICATIONS, getLocale( request ), model );
     }
 
@@ -1307,7 +1407,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         model.put( MARK_APPLICATION, _application );
         model.put( MARK_PLUGIN_APPLICATIONS, pm.getApplications( ) );
         model.put( MARK_BUSINESS_CLASSES_COMBO, ModelService.getComboBusinessClasses( _nPluginId ) );
-
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
         return getXPage( TEMPLATE_CREATE_PLUGIN_APPLICATION, getLocale( request ), model );
     }
 
@@ -1334,7 +1435,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         model.put( MARK_PLUGIN_APPLICATIONS, pm.getApplications( ) );
         model.put( MARK_BUSINESS_CLASSES_COMBO, ModelService.getComboBusinessClasses( _nPluginId ) );
         model.put( MARK_PLUGIN_ID, Integer.toString( _nPluginId ) );
-
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
         return getXPage( TEMPLATE_MODIFY_PLUGIN_APPLICATION, getLocale( request ), model );
     }
 
@@ -1493,7 +1595,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         Map<String, Object> model = getModel( );
         model.put( MARK_PLUGIN_ID, Integer.toString( _nPluginId ) );
         model.put( MARK_PLUGIN_PORTLETS, ModelService.getPluginModel( _nPluginId ).getPortlets( ) );
-
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
         return getXPage( TEMPLATE_MANAGE_PLUGIN_PORTLETS, getLocale( request ), model );
     }
 
@@ -1511,7 +1614,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 
         Map<String, Object> model = getPluginModel( );
         model.put( MARK_PORTLET, _portlet );
-
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
         return getXPage( TEMPLATE_CREATE_PLUGIN_PORTLET, getLocale( request ), model );
     }
 
@@ -1534,7 +1638,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 
         Map<String, Object> model = getModel( );
         model.put( MARK_PORTLET, _portlet );
-
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
         return getXPage( TEMPLATE_MODIFY_PLUGIN_PORTLET, getLocale( request ), model );
     }
 
@@ -1681,7 +1786,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         model.put( MARK_PLUGIN_REST, pm.getRest( ) );
         model.put( MARK_BUSINESS_CLASSES, pm.getBusinessClasses( ) );
         model.put( MARK_SCHEMES_COMBO, GeneratorService.getGenerationSchemes( ) );
-
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
         return getXPage( TEMPLATE_GET_RECAPITULATE, getLocale( request ), model );
     }
 
@@ -1793,7 +1899,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         model.put( MARK_PLUGIN_ID, Integer.toString( _nPluginId ) );
         model.put( MARK_BUSINESS_CLASSES_COMBO, ModelService.getComboBusinessClasses( _nPluginId ) );
         model.put( MARK_PLUGIN_REST, ModelService.getRest( _nPluginId ) );
-
+        model.put( MARK_PROJECT_TYPE, _strProjectType );
+        
         return getXPage( TEMPLATE_MANAGE_REST, getLocale( request ), model );
     }
 

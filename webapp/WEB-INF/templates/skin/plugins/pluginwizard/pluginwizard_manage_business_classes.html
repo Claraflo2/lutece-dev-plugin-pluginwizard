@@ -13,6 +13,9 @@
 							<div class="card-body">
 								<div class="card-text">
                                     #i18n{pluginwizard.pluginwizard_manage_business_classes.pageHelp}
+                                    <#if (project_type?? && project_type == 'WORKFLOWTASK')>  
+                                    	#i18n{pluginwizard.pluginwizard_manage_business_classes.pageHelpWorkflowComplement}
+                                    </#if>
                                 </div>
                             </div>
                         </div>
@@ -22,14 +25,24 @@
                     <!-- Card Content-->
                     <div class="col-md-9">
                     	<fieldset>
-							<legend>#i18n{pluginwizard.pluginwizard_manage_business_classes.pageTitle}</legend>
-                            
+							<legend>
+							<#if (project_type?? && project_type == 'WORKFLOWTASK')>
+								#i18n{pluginwizard.pluginwizard_manage_business_classes.pageTitleConfigurationClass}
+							<#else>
+								#i18n{pluginwizard.pluginwizard_manage_business_classes.pageTitle}
+							</#if>
+							</legend>
+
                             <#include "infos_handler.html" />
                         
 	                        <div class="d-flex justify-content-end mb-3">
 	                            <form method="post" action="jsp/site/Portal.jsp">
 	                                <input type="hidden" name="page" value="pluginwizard" />
-	                                <input type="hidden" name="view" value="createBusinessClass" />
+	                                <#if (project_type?? && project_type == 'WORKFLOWTASK')>
+	                                	<input type="hidden" name="view" value="createConfigurationClass" />
+	                                <#else>
+	                                	<input type="hidden" name="view" value="createBusinessClass" />
+	                                </#if>
 	                                <button type="submit" class="btn btn-primary">
 	                                    <i class="ti ti-plus"></i> #i18n{pluginwizard.pluginwizard_manage_business_classes.buttonAddBusinessClass}
 	                                </button>

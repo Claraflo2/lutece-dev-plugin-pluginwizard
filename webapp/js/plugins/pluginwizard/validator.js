@@ -33,6 +33,13 @@
 	"portletTypeName":/^[A-Z_]*_PORTLET$/,
 	"portletJspName":/^Portlet[A-Z][a-zA-Z]*$/,
 	"portletJspNameSize":/^.{1,100}$/,
+	"taskName":/^[A-Z][A-Za-z]*$/, 
+	"taskNameSize":/^.{1,51}$/,
+	"configurationClassNameSize":/^.{11,64}$/,
+	"configurationClassName":/^[A-Z][A-Za-z]*$/,
+	"configurationClassNamePattern":/^Task[A-Z][A-Za-z]*Config$/,
+	"configurationTableNameSize":/^.{1,64}$/,
+	"configurationTableName":/^[a-z_]+$/
  };
  
 function isEmpty(value) 
@@ -169,7 +176,7 @@ function updateHelpMessageFront(inputId)
 					isSpanFound = true;
 					
 				}
-				else if(key==='businessTableNamePrefix')
+				else if(key==='businessTableNamePrefix' || key==='configurationTableNamePrefix' )
 				{
 					
 					const projectName = getProjectName();
@@ -294,7 +301,7 @@ function autoFillBusinessClassForm(strBusinessClassFormId)
     // Select form inputs		
 	const businessClassNameInput = document.getElementById('businessClassName-input');
     const pluralBusinessClassNameInput = document.getElementById('pluralBusinessClassName-input');
-    const businesstableNameInput = document.getElementById('businessTableName-input');
+    const businessTableNameInput = document.getElementById('businessTableName-input');
     
 	//erase forbidden caracters
 	var strCleanBusinessClassName = businessClassNameInput.value.replace(/[^a-zA-Z _]/g,"");
@@ -306,10 +313,50 @@ function autoFillBusinessClassForm(strBusinessClassFormId)
 	//Assign values ​​to form inputs
 	businessClassNameInput.value = strBusinessClassNameFormated;
 	pluralBusinessClassNameInput.value = pluralize(strBusinessClassNameFormated);
-	businesstableNameInput.value = (strPluginName+strBusinessClassNameFormated).replace(/([A-Z])/g, '_$1').toLowerCase().slice(0,MAX_SQL);
+	businessTableNameInput.value = (strPluginName+strBusinessClassNameFormated).replace(/([A-Z])/g, '_$1').toLowerCase().slice(0,MAX_SQL);
 	
 	//Update help message spans associated with all form inputs
 	updateFormFront(strBusinessClassFormId);
+}
+
+
+/* Function to auto fill the form of configuration class (In Business section : pluginwizard_create_configuration_class.html) */
+function autoFillConfigurationClassForm(strConfigurationClassFormId)
+{
+	
+	const MAX_SQL = 64;
+	const prefixClass="Task"; 
+	const suffixClass="Config";
+	
+	// Select plugin name value
+    const strPluginName = document.getElementById('plugin_name').value.replaceAll('-','_');
+	const strTaskName = document.getElementById('taskName-input').value;
+	
+	
+    // Select form inputs		
+	const configurationClassNameInput = document.getElementById('configurationClassName-input');
+    const pluralConfigurationClassNameInput = document.getElementById('pluralConfigurationClassName-input');
+    const configurationTableNameInput = document.getElementById('configurationTableName-input');
+    
+	configurationClassNameInput.value= strTaskName;
+	pluralConfigurationClassNameInput.value = strTaskName;
+	configurationTableNameInput.value = strTaskName;
+	
+	//erase forbidden caracters
+	var strCleanTaskName = strTaskName.replace(/[^a-zA-Z _]/g,""); 
+	
+	//Formated names
+	var strConfigurationClassNameFormated = strCleanTaskName.replace(/[_\s]+(.)/g, (_, letter) => letter.toUpperCase()).replace(/[ _]/g,"");
+	strConfigurationClassNameFormated = strConfigurationClassNameFormated.charAt(0).toUpperCase() + strConfigurationClassNameFormated.slice(1);
+	strConfigurationClassNameFormated = prefixClass + strConfigurationClassNameFormated + suffixClass;
+	
+	//Assign values ​​to form inputs
+	configurationClassNameInput.value = strConfigurationClassNameFormated;
+	pluralConfigurationClassNameInput.value = pluralize(strConfigurationClassNameFormated);
+	configurationTableNameInput.value = (strPluginName+strConfigurationClassNameFormated).replace(/([A-Z])/g, '_$1').toLowerCase().slice(0,MAX_SQL);
+	
+	//Update help message spans associated with all form inputs
+	updateFormFront(strConfigurationClassFormId);
 }
 
 /* Function to auto fill the form of the admin feature (in Administration section : pluginwizard_create_admin_feature.html) */
