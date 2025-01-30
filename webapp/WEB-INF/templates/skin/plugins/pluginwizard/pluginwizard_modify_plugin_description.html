@@ -49,11 +49,12 @@
 									</label>
 									<div class="col-md-10">
 										<input class="form-control" type="text" name="type"
-                                               value=<#if (
-                                                    (plugin_model.type?? && plugin_model.type == 'MODULE') || 
-                                                    (plugin_model.pluginName?? && plugin_model.pluginName?contains('-'))
-                                                    )> #i18n{pluginwizard.pluginwizard_modify_plugin_description.labelModule}
-                                                    <#else> #i18n{pluginwizard.pluginwizard_modify_plugin_description.labelPlugin} 
+                                               value=<#if (plugin_model.type?? && plugin_model.type == 'MODULE')> 
+                                               			"#i18n{pluginwizard.pluginwizard_modify_plugin_description.labelModule}"
+                                               		<#elseif (plugin_model.type?? && plugin_model.type == 'WORKFLOWTASK')>
+                                               		    "#i18n{pluginwizard.pluginwizard_modify_plugin_description.labelWorkflowTask}"
+                                                    <#else> 
+                                                    	"#i18n{pluginwizard.pluginwizard_modify_plugin_description.labelPlugin}"
                                                     </#if> readonly
                                                style="background-color: #eeeeee;" />
 									</div>
@@ -152,6 +153,16 @@
 											<option value="0">#i18n{pluginwizard.pluginwizard_modify_plugin_description.labelFalse}
 											</option>
 										</select>
+										<div id="pluginDbPoolRequired-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">
+											<span id="pluginDbPoolRequired-help-message-span" class="d-block">
+												<i class="ti ti-info-circle mx-1"></i>
+													<#if (project_type?? && project_type == 'WORKFLOWTASK')> 
+														#i18n{pluginwizard.pluginwizard_create_plugin_description.helpRulesPluginDbPoolRequiredForWorkflowTask}
+													<#else>
+														#i18n{pluginwizard.pluginwizard_create_plugin_description.helpRulesPluginDbPoolRequired}
+													</#if>
+											</span>
+										</div>
 									</div>
 								</div>
 								

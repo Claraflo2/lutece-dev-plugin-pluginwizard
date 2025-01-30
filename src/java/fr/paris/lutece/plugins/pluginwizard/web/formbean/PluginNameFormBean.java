@@ -46,7 +46,9 @@ public class PluginNameFormBean implements Serializable,FormBean
     @NotEmpty( message = "pluginwizard.error.plugin.name.notEmpty" )
     @Pattern( regexp = "([a-z]*)", message = "pluginwizard.error.plugin.name.pattern" )
     private String _strName;
-
+    @Pattern( regexp = "^(MODULE|PLUGIN|WORKFLOWTASK)$", message = "pluginwizard.error.project.type" )
+    private String _strType;
+    
     /**
      * @return the name
      */
@@ -62,5 +64,22 @@ public class PluginNameFormBean implements Serializable,FormBean
     public void setName( String strName )
     {
         _strName = strName;
+    }
+    
+    /**
+     * @return the type
+     */
+    public String getType( )
+    {
+        return _strType;
+    }
+
+    /**
+     * @param strType
+     *            the name to set
+     */
+    public void setType( String strType )
+    {
+        _strType = strType;
     }
 }

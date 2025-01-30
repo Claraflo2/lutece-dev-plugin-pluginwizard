@@ -30,14 +30,14 @@
 								<#include "errors_handler.html" />
 								<#include "infos_handler.html" />
 								
-								<div class="float-end">
+								<input type="hidden" name="page" value="pluginwizard" />
+								<input type="hidden" name="action" value="createPlugin" />
+								
+							    <div class="float-end">
 									<img src="images/local/skin/java.png" alt="Java logo" width="80" /> 
 									<!--<strong>OR</strong> 
 									<img src="images/local/skin/kotlin.png" alt="Kotlin logo" width="80" />-->
 								</div>
-								
-								<input type="hidden" name="page" value="pluginwizard" />
-								<input type="hidden" name="action" value="createPlugin" />
 								
 								<!-- list of components generated -->
 								<div class="form-group">
@@ -67,20 +67,26 @@
 										<div class="col mb-3 align-items-center">
 		                                    <div class="col-md-10">
 		                                    	<div class="form-check">
-											    	<input type="radio" id="id-project-type-plugin" name="project_type_selector" class="form-check-input" value="plugin" checked>
+											    	<input type="radio" id="id-project-type-plugin" name="type" class="form-check-input" value="PLUGIN" checked>
 											    	<label class="form-check-label" for="id-project-type-plugin">
 											      		#i18n{pluginwizard.pluginwizard_create_plugin.OptionPlugin}
 											    	</label>
 											  	</div>
 											  	<div class="form-check">
-											    	<input type="radio" id="id-project-type-module" name="project_type_selector" class="form-check-input" value="module">
+											    	<input type="radio" id="id-project-type-module" name="type" class="form-check-input" value="MODULE">
 											    	<label class="form-check-label" for="id-project-type-module">
 											      		#i18n{pluginwizard.pluginwizard_create_plugin.OptionModule}
 											    	</label>
 											  	</div> 
+											  	<div class="form-check">
+											    	<input type="radio" id="id-project-type-workflowTask" name="type" class="form-check-input" value="WORKFLOWTASK">
+											    	<label class="form-check-label" for="id-project-type-workflowTask">
+											      		#i18n{pluginwizard.pluginwizard_create_plugin.OptionWorkflowTask}
+											    	</label>
+											  	</div> 
 		                                    </div>
 	                                	</div>
-	                                	
+	                                		                                	
 										<div class="col-md-7">
 											<input type="text" id="projectName-input" name="name" class="form-control" placeholder="#i18n{pluginwizard.pluginwizard_create_plugin.placeholderPluginName}" aria-describedby="projectName-help-message-div"/> 
 											<div id="projectName-help-message-div" class="mt-2 text-muted" aria-live="polite" role="alert">
@@ -95,7 +101,6 @@
 										</div>
 									</div>
 								</div>
-	
 							</fieldset>
 						</form>
 						
@@ -145,6 +150,12 @@
 	 		"mandatory": "#i18n{pluginwizard.pluginwizard_create_plugin.helpRulesMandatoryModuleName}",
 	 		"moduleName": "#i18n{pluginwizard.pluginwizard_create_plugin.helpRulesModuleName}",
 	 		"conventionModuleName" : "#i18n{pluginwizard.pluginwizard_create_plugin.helpRulesConventionModuleName}"
+	 	},
+	 	"workflowtask": {
+	 		"placeholder": "#i18n{pluginwizard.pluginwizard_create_plugin.placeholderWorkflowTaskName}",
+	 		"mandatory": "#i18n{pluginwizard.pluginwizard_create_plugin.helpRulesMandatoryWorkflowTaskName}",
+	 		"workflowTaskName": "#i18n{pluginwizard.pluginwizard_create_plugin.helpRulesWorkflowTaskName}",
+	 		"conventionWorkflowTaskName" : "#i18n{pluginwizard.pluginwizard_create_plugin.helpRulesConventionWorkflowTaskName}"
 	 	}
 	 }
 			
@@ -153,9 +164,8 @@
 	
 	//Listerners
 	document.getElementById('create-plugin-form').addEventListener('input', function(event){validationForm(event);});
-	document.querySelectorAll('input[name="project_type_selector"]').forEach(button => {
+	document.querySelectorAll('input[name="type"]').forEach(button => {
 	  button.addEventListener('change', function(){ switchTypeProject('create-plugin-form');
 	  });
 	});
-   
  </script>

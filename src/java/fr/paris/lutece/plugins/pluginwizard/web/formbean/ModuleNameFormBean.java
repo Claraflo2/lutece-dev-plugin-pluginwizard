@@ -48,6 +48,8 @@ public class ModuleNameFormBean implements Serializable,FormBean
     @Pattern( regexp = "([a-z-]*)", message = "pluginwizard.error.module.name.forbidden.caracters" )
     @Pattern( regexp = "(^[^-].*[^-]$)", message = "pluginwizard.error.module.name.forbidden.pattern" )
     private String _strName;
+    @Pattern( regexp = "^(MODULE|PLUGIN|WORKFLOWTASK)$", message = "pluginwizard.error.project.type" )
+    private String _strType;
 
     /**
      * @return the name
@@ -64,5 +66,22 @@ public class ModuleNameFormBean implements Serializable,FormBean
     public void setName( String strName )
     {
         _strName = strName;
+    }
+    
+    /**
+     * @return the type
+     */
+    public String getType( )
+    {
+        return _strType;
+    }
+
+    /**
+     * @param strType
+     *            the name to set
+     */
+    public void setType( String strType )
+    {
+        _strType = strType;
     }
 }

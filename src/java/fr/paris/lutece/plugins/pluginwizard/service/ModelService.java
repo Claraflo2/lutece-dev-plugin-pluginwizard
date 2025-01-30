@@ -38,11 +38,13 @@ import fr.paris.lutece.plugins.pluginwizard.business.ModelHome;
 import fr.paris.lutece.plugins.pluginwizard.business.model.Application;
 import fr.paris.lutece.plugins.pluginwizard.business.model.Attribute;
 import fr.paris.lutece.plugins.pluginwizard.business.model.BusinessClass;
+import fr.paris.lutece.plugins.pluginwizard.business.model.Configuration;
 import fr.paris.lutece.plugins.pluginwizard.business.model.Feature;
 import fr.paris.lutece.plugins.pluginwizard.business.model.PluginModel;
 import fr.paris.lutece.plugins.pluginwizard.business.model.Portlet;
 import fr.paris.lutece.plugins.pluginwizard.business.model.Rest;
 import fr.paris.lutece.plugins.pluginwizard.web.formbean.BusinessClassFormBean;
+import fr.paris.lutece.plugins.pluginwizard.web.formbean.ConfigurationFormBean;
 import fr.paris.lutece.plugins.pluginwizard.web.formbean.DescriptionFormBean;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppException;
@@ -85,9 +87,10 @@ public final class ModelService
     {
         Model model = new Model( );
         model.setName( strPluginName );
-
+        
         PluginModel pm = new PluginModel( );
         pm.setPluginName( strPluginName );
+        
         model = ModelHome.create( model );
         pm.setIdPlugin( model.getIdPlugin( ) );
         savePluginModel( pm );
@@ -1225,6 +1228,14 @@ public final class ModelService
         return _serviceAttribute.getType( nAttributeTypeId ).getDescription( );
     }
 
+    /**
+    * Update the description
+    *
+    * @param nPluginId
+    *            The plugin's ID
+    * @param description
+    *            The description with new values from pluginwizard form
+    */
     public static void updateDescription( int nPluginId, DescriptionFormBean description )
     {
         PluginModel pm = getPluginModel( nPluginId );
@@ -1240,7 +1251,15 @@ public final class ModelService
 
         savePluginModel( pm );
     }
-
+    
+    /**
+    * Get description
+    *
+    * @param nPluginId
+    *            The plugin's ID
+    * @return descriptionFormBean
+    *            Description of plugin
+    */
     public static DescriptionFormBean getDescription( int nPluginId )
     {
         PluginModel pm = getPluginModel( nPluginId );
@@ -1255,7 +1274,15 @@ public final class ModelService
 
         }
     }
-
+    
+    /**
+    * Get Form Business Class
+    *
+    * @param nPluginId
+    *            The plugin's ID
+    * @return businessClassFormBean
+    *            A business class of plugin
+    */
     public static BusinessClassFormBean getFormBusinessClass( int nPluginId, int nBusinessClassId )
     {
         PluginModel pm = getPluginModel( nPluginId );
@@ -1269,4 +1296,61 @@ public final class ModelService
             throw new AppException( "JSON exception", e );
         }
     }
+    
+    
+    
+    /**
+     * Set the configuration in plugin model
+     * 
+     * @param nPLuginId
+     *            PLugin ID
+     * @param configurationFormBean 
+     */
+    public static void updateConfiguration( int nPluginId, ConfigurationFormBean configuration )
+    {
+        PluginModel pm = getPluginModel( nPluginId );
+        		
+        try
+        {
+            BeanUtils.copyProperties( pm.getConfiguration(), configuration );
+        }
+        catch( IllegalAccessException | InvocationTargetException e )
+        {
+            throw new AppException( "Bean exception", e );
+        }
+
+        savePluginModel( pm );
+    }
+
+    /**
+     * Update attribute when form config and form task options have changed to false
+     * 
+     * @param nPLuginId
+     *            PLugin ID
+     * @param configurationFormBean 
+     *           Configuration of project
+     */
+	public static void updateAttributeByConfiguration(int nPluginId, ConfigurationFormBean configuration) {
+		
+		
+		PluginModel pm = getPluginModel( nPluginId );
+		List<BusinessClass> businessClasses =  pm.getBusinessClasses( );
+		
+		for (BusinessClass bc : businessClasses) {
+			
+			for ( Attribute attribute : bc.getAttributes( ) )
+			{
+				if( configuration.getWorkflowFormConfigRequired().equals("0") ) {
+					attribute.setWorkflowFormConfigRequired(false);
+				}
+				
+				if( configuration.getWorkflowFormTaskRequired().equals("0") ) {
+					attribute.setWorkflowFormTaskRequired(false);
+				}
+	        }
+		}
+		
+		savePluginModel( pm );
+	}
+    
 }

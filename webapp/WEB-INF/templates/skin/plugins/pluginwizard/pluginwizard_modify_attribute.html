@@ -63,15 +63,58 @@
 								<div class="row mb-3 align-items-start">
                                     <label class="col-form-label col-md-2 text-end align-self-start">
                                     	#i18n{pluginwizard.pluginwizard_modify_attribute.labelMandatory} : 
-                                    </label>                            
-									<div class="col-md-10">
-										<div class="checkbox">    
-											<div class="form-check">
-												<input class="checkbox" type="checkbox" name="not_null" value="1" <#if attribute.notNull>checked</#if>  />
+                                    </label>
+                                    <div class="col-md-10 mt-4">
+                                        <div class="checkbox">    
+                                            <div class="form-check">
+												<input class="form-check-input" type="checkbox" name="not_null" value="1" <#if attribute.notNull>checked</#if> />
 											</div>
 										</div>
 									</div>  
 								</div>
+								
+								 <#if (project_type?? && project_type == 'WORKFLOWTASK')>	
+                                	
+                                	<#if configuration.workflowFormConfigRequired?? && configuration.workflowFormConfigRequired=="1">	
+	                                	<!-- Group form WorkflowFormConfigRequired -->
+		                                 <div class="row mb-3 align-items-start">
+		                                    <label class="col-form-label col-md-2 text-end align-self-start">
+		                                        #i18n{pluginwizard.pluginwizard_modify_attribute.labelWorkflowFormConfigRequired} : 
+		                                    </label>
+		                                    <div class="col-md-10">
+		                                        <div class="col-md-10 d-flex align-items-center">
+										        	<div class="form-check me-3">
+		                                            	<input class="form-check-input" type="checkbox" name="workflow_form_config_required" value="1" <#if attribute.workflowFormConfigRequired>checked</#if> />
+		                                        	</div>
+			                                        <div class="card flex-fill">  
+											            <div class="card-body">
+				  											#i18n{pluginwizard.pluginwizard_modify_attribute.helpFormConfig}
+				  										</div>
+				  									</div>
+				  								</div>
+		                                	</div>	
+		                                 </div>
+		                            </#if>
+		                            
+		                            <#if configuration.workflowFormTaskRequired?? && configuration.workflowFormTaskRequired=="1">     
+			                             <!-- Group form Form Task Required -->
+		                                <div class="row mb-3 align-items-start">
+										    <label class="col-form-label col-md-2 text-end align-self-start">
+										        #i18n{pluginwizard.pluginwizard_modify_attribute.labelWorkflowFormTaskRequired} : 
+										    </label>
+										    <div class="col-md-10 d-flex align-items-center">
+										        <div class="form-check me-3">
+										            <input class="form-check-input" type="checkbox" name="workflow_form_task_required" value="1" <#if attribute.workflowFormTaskRequired>checked</#if> />
+										        </div>
+										        <div class="card flex-fill">  
+										            <div class="card-body">
+										                #i18n{pluginwizard.pluginwizard_modify_attribute.helpFormTask}
+										            </div>
+										        </div>
+										    </div>
+										</div>
+									</#if>
+                                </#if>
 								
 							<!-- Submit Buttons -->								
 							<div class="row mb-3">
@@ -79,7 +122,7 @@
 									<button type="submit" name="action_modifyAttribute"class="btn btn-primary me-2">
 										#i18n{pluginwizard.pluginwizard_modify_attribute.buttonModifyAttribute}
 									</button>                    
-									<button type="submit" name="view_modifyBusinessClass" class="btn btn-secondary">
+									<button type="submit" name=<#if (project_type?? && project_type == 'WORKFLOWTASK')>"view_modifyConfigurationClass"<#else>"view_modifyBusinessClass"</#if> class="btn btn-secondary">
 										#i18n{pluginwizard.pluginwizard_modify_attribute.buttonBack}
 									</button>                                                             
 								</div>   

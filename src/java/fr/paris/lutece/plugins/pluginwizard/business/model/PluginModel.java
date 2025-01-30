@@ -33,6 +33,7 @@
  */
 package fr.paris.lutece.plugins.pluginwizard.business.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.URL;
 
 import java.util.ArrayList;
@@ -81,6 +82,7 @@ public class PluginModel
     private List<Portlet> _listPluginPortlets;
     private List<BusinessClass> _listBusinessClasses;
     private Rest _rest;
+    private Configuration _configuration;
     private boolean _bIsModule;
 
     /**
@@ -93,6 +95,7 @@ public class PluginModel
         _listPluginPortlets = new ArrayList<>( );
         _listBusinessClasses = new ArrayList<>( );
         _rest = new Rest( );
+        _configuration = new Configuration( );
     }
 
     /**
@@ -551,6 +554,28 @@ public class PluginModel
     {
         return _rest;
     }
+    
+    /**
+     * Returns the configuration
+     * 
+     * @return The configuration
+     */
+    public Configuration getConfiguration( )
+    {
+        return _configuration;
+    }
+    
+    /**
+     * Sets the configuration
+     * 
+     * @param configuration
+     *            The configuration
+     */
+	public void setConfiguration(Configuration configuration) 
+	{	
+		_configuration = configuration;
+	}
+
 
     /**
      * Sets the list of plugin features
@@ -629,7 +654,7 @@ public class PluginModel
     }
 
     /**
-     * Returns the Type (module or plugin)
+     * Returns the Type (module, plugin or workflowtask)
      * 
      * @return The Type
      */
@@ -679,6 +704,16 @@ public class PluginModel
     public void setModule( boolean bIsModule )
     {
         this._bIsModule = bIsModule;
+    }
+    
+    /**
+     * Returns true if this instance is a workflow task
+     * 
+     * @return True if _strType is equal to "WORKFLOWTASK"
+     */
+    public boolean isWorkflowTask( )
+    {
+        return ( StringUtils.equals( "WORKFLOWTASK", _strType ) );
     }
 
 }

@@ -6,6 +6,7 @@
 	"moduleName": /^[a-z-]+$/,
 	"conventionModuleName": /^[a-z]+-[a-z]+$/,
 	"workflowTaskName": /^[a-z-]+$/,
+	"conventionWorkflowTaskName": /^[a-z]*-{0,1}[a-z]+$/,
 	"pluginDescription": /^.{5,255}$/,
 	"pluginProvider": /^.{3,255}$/,
 	"pluginVersion": /^\d\.\d\.\d$/,
@@ -31,8 +32,16 @@
 	"portletTypeName":/^[A-Z_]*_PORTLET$/,
 	"portletJspName":/^Portlet[A-Z][a-zA-Z]*$/,
 	"portletJspNameSize":/^.{1,100}$/,
+	"taskName":/^Task[A-Za-z]*$/, 
+	"taskNameSize":/^.{1,51}$/,
+	"configurationClassNameSize":/^.{11,64}$/,
+	"configurationClassName":/^[A-Z][A-Za-z]*$/,
+	"configurationClassNamePattern":/^Task[A-Z][A-Za-z]*Config$/,
+	"configurationTableNamePrefix":/^workflow_task_[a-z_]*$/,
+	"configurationTableNameSize":/^.{1,64}$/,
+	"configurationTableName":/^[a-z_]+$/
  };
-
+ 
 function isEmpty(value) 
 {
 	return value.trim() === '';
@@ -167,11 +176,11 @@ function updateHelpMessageFront(inputId)
 					isSpanFound = true;
 					
 				}
-				else if(key==='businessTableNamePrefix')
+				else if(key==='businessTableNamePrefix' || key==='configurationTableNamePrefix' )
 				{
 					
-					const projectName = getProjectName();
-					const businessTableRegex = new RegExp('^' + projectName + '_[a-z_]*$');
+					const stPrefix = key==='businessTableNamePrefix'? getProjectName() : "workflow";
+					const businessTableRegex = new RegExp('^' + stPrefix + '_[a-z_]*$');
 					
 					isValid = isValidEntry(targetInputValue,businessTableRegex);
 					switchFrontMessage(isValid,span);	
@@ -228,7 +237,7 @@ function switchTypeProject(strPluginFormId)
 {
 	   
 	//Get the project type selected
-	const radios = document.querySelectorAll('input[name="project_type_selector"]');
+	const radios = document.querySelectorAll('input[name="type"]');
 	const selectedRadio = Array.from(radios).find(radio => radio.checked); // Find selected radio
 	const projectType = selectedRadio ? selectedRadio.value.toLowerCase() : '';
 	
@@ -244,38 +253,31 @@ function switchTypeProject(strPluginFormId)
 		
 		if(dictionnaryHelperMessage.hasOwnProperty(projectType))
 		{
-	 		if (projectType === 'plugin' || projectType === 'module')
-	 		{	
-				//Update input
-	 			projectNameInput.placeholder = dictionnaryHelperMessage[projectType].hasOwnProperty('placeholder')?dictionnaryHelperMessage[projectType]['placeholder']:'';
 
-				//Update help message
-				helpMessageDiv.innerHTML = '';
-				Object.entries(dictionnaryHelperMessage[projectType]).forEach(([key, value]) => {
-					
-					if(key!=='placeholder'){
-						const newSpan = document.createElement("span");
-			 			const newIcon = document.createElement("i");
-			 			const textNode = document.createTextNode(value);
-			 	   	  		
-			 			newSpan.id = key+'-help-message-span';
-			 			newIcon.id = key+'-help-icon';
-			 	   	  	
-						newIcon.classList.add('mx-1');
-							
-			 			newSpan.appendChild(newIcon);
-			 			newSpan.appendChild(textNode);
-			 	   	  		
-			 			helpMessageDiv.appendChild(newSpan);	
-					}
-					
-		       });
-		   	}
-		   	else
-		   	{
-				projectNameInput.placeholder = '';
-				helpMessageDiv.innerHTML = '';
-		   	}
+			//Update input
+ 			projectNameInput.placeholder = dictionnaryHelperMessage[projectType].hasOwnProperty('placeholder')?dictionnaryHelperMessage[projectType]['placeholder']:'';
+
+			//Update help message
+			helpMessageDiv.innerHTML = '';
+			Object.entries(dictionnaryHelperMessage[projectType]).forEach(([key, value]) => {
+				
+				if(key!=='placeholder'){
+					const newSpan = document.createElement("span");
+		 			const newIcon = document.createElement("i");
+		 			const textNode = document.createTextNode(value);
+		 	   	  		
+		 			newSpan.id = key+'-help-message-span';
+		 			newIcon.id = key+'-help-icon';
+		 	   	  	
+					newIcon.classList.add('mx-1');
+						
+		 			newSpan.appendChild(newIcon);
+		 			newSpan.appendChild(textNode);
+		 	   	  		
+		 			helpMessageDiv.appendChild(newSpan);	
+				}
+				
+	       });
 		}
 		else
 		{	
@@ -299,7 +301,7 @@ function autoFillBusinessClassForm(strBusinessClassFormId)
     // Select form inputs		
 	const businessClassNameInput = document.getElementById('businessClassName-input');
     const pluralBusinessClassNameInput = document.getElementById('pluralBusinessClassName-input');
-    const businesstableNameInput = document.getElementById('businessTableName-input');
+    const businessTableNameInput = document.getElementById('businessTableName-input');
     
 	//erase forbidden caracters
 	var strCleanBusinessClassName = businessClassNameInput.value.replace(/[^a-zA-Z _]/g,"");
@@ -311,10 +313,48 @@ function autoFillBusinessClassForm(strBusinessClassFormId)
 	//Assign values ​​to form inputs
 	businessClassNameInput.value = strBusinessClassNameFormated;
 	pluralBusinessClassNameInput.value = pluralize(strBusinessClassNameFormated);
-	businesstableNameInput.value = (strPluginName+strBusinessClassNameFormated).replace(/([A-Z])/g, '_$1').toLowerCase().slice(0,MAX_SQL);
+	businessTableNameInput.value = (strPluginName+strBusinessClassNameFormated).replace(/([A-Z])/g, '_$1').toLowerCase().slice(0,MAX_SQL);
 	
 	//Update help message spans associated with all form inputs
 	updateFormFront(strBusinessClassFormId);
+}
+
+
+/* Function to auto fill the form of configuration class (In Business section : pluginwizard_create_configuration_class.html) */
+function autoFillConfigurationClassForm(strConfigurationClassFormId)
+{
+	
+	const MAX_SQL = 64; 
+	const suffixClass="Config";
+	
+	// Select plugin name value
+	const strTaskName = document.getElementById('taskName-input').value;
+	const strWorkflow = "workflow";
+	
+    // Select form inputs		
+	const configurationClassNameInput = document.getElementById('configurationClassName-input');
+    const pluralConfigurationClassNameInput = document.getElementById('pluralConfigurationClassName-input');
+    const configurationTableNameInput = document.getElementById('configurationTableName-input');
+    
+	configurationClassNameInput.value= strTaskName;
+	pluralConfigurationClassNameInput.value = strTaskName;
+	configurationTableNameInput.value = strTaskName;
+	
+	//erase forbidden caracters
+	var strCleanTaskName = strTaskName.replace(/[^a-zA-Z _]/g,""); 
+	
+	//Formated names
+	var strConfigurationClassNameFormated = strCleanTaskName.replace(/[_\s]+(.)/g, (_, letter) => letter.toUpperCase()).replace(/[ _]/g,"");
+	strConfigurationClassNameFormated = strConfigurationClassNameFormated.charAt(0).toUpperCase() + strConfigurationClassNameFormated.slice(1);
+	strConfigurationClassNameFormated = strConfigurationClassNameFormated + suffixClass;
+	
+	//Assign values ​​to form inputs
+	configurationClassNameInput.value = strConfigurationClassNameFormated;
+	pluralConfigurationClassNameInput.value = pluralize(strConfigurationClassNameFormated);
+	configurationTableNameInput.value = (strWorkflow+strConfigurationClassNameFormated).replace(/([A-Z])/g, '_$1').toLowerCase().slice(0,MAX_SQL);
+	
+	//Update help message spans associated with all form inputs
+	updateFormFront(strConfigurationClassFormId);
 }
 
 /* Function to auto fill the form of the admin feature (in Administration section : pluginwizard_create_admin_feature.html) */
@@ -344,4 +384,48 @@ function autoFillAdminFeatureForm(strAdminFeatureFormId)
 	
 	//Update help message spans associated with all form inputs
 	updateFormFront(strAdminFeatureFormId);
+}
+
+function updateDivInfoVisibility(strFormId)
+{
+	// Sélectionner all text type inputs in form
+	const form = document.getElementById(strFormId);
+	
+	if(form){
+		const selects = form.querySelectorAll('select');
+	
+		selects.forEach(select => {
+		    switchDivInfoVisibility(select.id);
+		});
+	}	
+}
+
+
+/* Switch message when select value change  */
+function switchDivInfoVisibility(selectId)
+{	
+	
+	const selectForm = document.getElementById(selectId);
+	const selectValue = selectForm.value==0?"False":"True";
+	const HelpMessageDivId = selectId+"-help-message-div";
+
+	const helpMessageDiv = document.getElementById(HelpMessageDivId);
+	
+	
+	if(helpMessageDiv){
+		
+		const helperSpans = helpMessageDiv.querySelectorAll('span');
+			
+		helperSpans.forEach(span => {
+			
+			if (span.id.includes(selectValue)) {
+				span.classList.remove('d-none');
+				span.classList.add('d-block');
+			}
+			else {
+				span.classList.remove('d-block');
+				span.classList.add('d-none');
+			}
+		});
+	}
 }

@@ -61,6 +61,8 @@ public class Attribute implements Serializable
     private String _strAttributeName;
     private int _nMaxLength;
     private boolean _bNotNull;
+    private boolean _bWorkflowFormConfigRequired;
+    private boolean _bWorkflowFormTaskRequired;
 
     /**
      * Returns the IdAttribute
@@ -239,7 +241,49 @@ public class Attribute implements Serializable
     {
         _bNotNull = bNotNull;
     }
+    
+    /**
+     * Returns the bWorkflowFormConfigRequired
+     * 
+     * @return The bWorkflowFormConfigRequired
+     */
+    public boolean getWorkflowFormConfigRequired( )
+    {
+        return _bWorkflowFormConfigRequired;
+    }
 
+    /**
+     * Sets bWorkflowFormConfigRequired
+     * 
+     * @param bWorkflowFormConfigRequired
+     *           
+     */
+    public void setWorkflowFormConfigRequired( boolean bWorkflowFormConfigRequired )
+    {
+        _bWorkflowFormConfigRequired = bWorkflowFormConfigRequired;
+    }
+
+    /**
+     * Returns the bWorkflowFormTaskRequired
+     * 
+     * @return The bWorkflowFormTaskRequired
+     */
+    public boolean getWorkflowFormTaskRequired( )
+    {
+        return _bWorkflowFormTaskRequired;
+    }
+
+    /**
+     * Sets bWorkflowFormTaskRequired
+     * 
+     * @param bWorkflowFormTaskRequired
+     *            The bWorkflowFormTaskRequired
+     */
+    public void setWorkflowFormTaskRequired( boolean bWorkflowFormTaskRequired )
+    {
+        _bWorkflowFormTaskRequired = bWorkflowFormTaskRequired;
+    }
+    
     /**
      * Returns the Constraint
      *

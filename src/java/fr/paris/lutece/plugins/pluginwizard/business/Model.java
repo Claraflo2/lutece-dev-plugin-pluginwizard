@@ -84,7 +84,7 @@ public class Model
     {
         _strName = strName;
     }
-
+    
     /**
      * Returns the ModelJson
      * 
